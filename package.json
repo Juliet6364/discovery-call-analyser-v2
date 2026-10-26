@@ -1,0 +1,11 @@
+{
+  "name": "discovery-call-analyser-v2",
+  "version": "2.0.0",
+  "private": true,
+  "description": "AI coach for B2B sales discovery calls: scores qualification with MEDDICC, BANT or SPICED, flags missed questions, suggests next steps and writes CRM notes. Accepts transcripts, chats and audio recordings.",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": { "node": ">=18" }
+}

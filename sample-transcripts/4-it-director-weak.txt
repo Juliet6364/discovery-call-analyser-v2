@@ -1,0 +1,11 @@
+Juliet (Nexora Automation): Hi Rohit, Juliet here from Nexora Automation. Did I catch you at a good time?
+Rohit (IT Director, Kavya Finance): I have five minutes before a meeting.
+Juliet: Perfect. So Nexora builds AI agents and RPA bots for financial services. Our agents do KYC checks, loan document verification, collections calls and customer service. We have 120 pre-built bots, a no-code studio, and we're ISO 27001 certified.
+Rohit: Okay.
+Juliet: We also have a generative AI layer that reads any document, plus dashboards for your compliance team. Lenders using us cut processing time by 70%.
+Rohit: We're already running some pilots with our core banking vendor.
+Juliet: Our platform works alongside any vendor. Would you like to see a demo?
+Rohit: Maybe later. The RBI audit is on our plate this quarter.
+Juliet: Understood. If you sign before December, we can give you 20% off the first year.
+Rohit: We don't buy like that. Just email me some material.
+Juliet: Sure, I'll send our brochure and case studies. Thanks Rohit!

@@ -1,0 +1,19 @@
+Juliet (Nexora Automation): Hi Meera, thanks for joining. I know COOs don't get many free minutes, so I'll keep it tight.
+Meera (COO, SwiftLane Logistics): Appreciated. I have 20 minutes.
+Juliet: I saw SwiftLane opened three new hubs this year. How is operations keeping up with the growth?
+Meera: Volume is up 40%, but back-office headcount has grown even faster. That's the problem.
+Juliet: Where does most of that back-office effort go?
+Meera: Shipment paperwork. We generate about 9,000 e-way bills and invoices a month. The team pulls data from our TMS, emails and Excel, and keys it into the GST portal and our ERP.
+Juliet: What happens when it goes wrong?
+Meera: Trucks wait at checkpoints. We paid around 18 lakh in detention charges and penalties last quarter. And our two biggest customers have complained twice.
+Juliet: That's significant. If you could fix it, what would good look like?
+Meera: No trucks held up for paperwork, and I'd rather not hire another 12 people next year.
+Juliet: Makes sense. Is this something you'd decide on, or does IT lead it?
+Meera: I'd sponsor it, but our CIO, Farhan, has to sign off on anything that touches the ERP.
+Juliet: Got it. Let me show you how our bots handle e-way bills. The bot reads the TMS export, validates GSTINs, generates the bill on the portal and posts it to your ERP. Customers see 85% less manual work.
+Meera: Interesting. We've also had a call with a UiPath partner. How are you different?
+Juliet: We deploy faster, and we include AI document reading for emailed invoices. Our pricing is usually lower too.
+Meera: Okay. What would something like this cost?
+Juliet: It depends on volumes, but for your size roughly 25 to 40 lakh in the first year.
+Meera: Hm. That's more than I expected. Send me a proposal and I'll look at it with Farhan.
+Juliet: Will do. I'll send it by Friday.

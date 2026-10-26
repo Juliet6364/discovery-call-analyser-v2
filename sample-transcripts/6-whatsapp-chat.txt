@@ -1,0 +1,14 @@
+[Mon 09:42] Juliet (Nexora Automation): Hi Kavya, Juliet here from Nexora. We met at the NASSCOM session last week. You mentioned your AP team is drowning in vendor invoices. Is that still a priority this quarter?
+[Mon 10:15] Kavya (Finance Controller, Brightline Retail): Hi Juliet! Yes very much. We get ~6,500 vendor invoices a month, mostly PDFs on email. 9 people key them into Tally + our ERP
+[Mon 10:17] Juliet: That's a lot of manual work. What does it cost you today? Delays, errors, late fees?
+[Mon 10:31] Kavya: Avg 11 days to approve an invoice. We lost early-payment discounts worth roughly 14 lakh last year. And month-end close takes 9 days 😩
+[Mon 10:33] Juliet: If we fixed this, what would success look like for you?
+[Mon 10:40] Kavya: Close in 5 days and capture at least 70% of discounts. That's literally on my goals for this year
+[Mon 10:42] Juliet: Clear. Who else would be involved in a decision like this?
+[Mon 11:05] Kavya: Me, our IT manager Rohit, and the CFO Anand signs anything above 20L
+[Mon 11:06] Juliet: Got it. Have you looked at other options?
+[Mon 11:20] Kavya: Our Tally partner pitched an add-on. Also thinking of just hiring 2 more people tbh
+[Mon 11:22] Juliet: Makes sense. Would a 30-min call with you and Rohit this week work? I can show how invoice capture works on your own sample invoices.
+[Tue 09:10] Kavya: Thursday 3pm works. I'll loop in Rohit. Anand won't join yet
+[Tue 09:12] Juliet: Perfect, invite sent for Thu 3pm. Could you share 10 sample invoices before then?
+[Tue 09:30] Kavya: Will do 👍

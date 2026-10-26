@@ -1,0 +1,16 @@
+Juliet (Nexora Automation): Hi Nikhil, thanks for the time. My aim today is to understand whether automation would actually help Brewly right now. If it won't, I'll say so. Fair?
+Nikhil (Co-founder and CEO, Brewly): Fair. My investor suggested I look at AI automation.
+Juliet: What made them suggest it?
+Nikhil: They think we spend too much on operations. We're a D2C coffee brand, about 60 people.
+Juliet: Which processes take the most manual effort today?
+Nikhil: Order reconciliation between Shopify, our warehouse and the payment gateways. Two people spend maybe half their week on it.
+Juliet: How many orders and invoices are we talking about each month?
+Nikhil: Around 4,000 orders, and maybe 200 supplier invoices.
+Juliet: What does the manual work cost you today, or put at risk?
+Nikhil: Honestly, not much. Maybe one refund mistake a month. It's annoying more than painful.
+Juliet: Is there budget set aside for automation this year?
+Nikhil: No. We're focused on raising our Series A by March. Any spend over 2 lakh needs both my co-founder Aisha and me to agree.
+Juliet: Are you looking at any other options?
+Nikhil: Someone on the team is trying Zapier. That might be enough.
+Juliet: Thanks for being open. Based on what you've said, a full automation programme wouldn't pay back for you right now. Zapier is probably the right tool at your volume. Could I check in with you after your Series A, around April, when volumes have grown?
+Nikhil: That's refreshing. Yes, April works.

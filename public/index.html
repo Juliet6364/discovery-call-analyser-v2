@@ -1,0 +1,794 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Discovery Call Analyser</title>
+<meta name="description" content="Score a sales discovery call with MEDDICC, BANT or SPICED. See what wasn't asked, get next steps, and copy ready-made CRM notes. Works with transcripts, chats and audio recordings.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&family=Familjen+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='6' width='8' height='20' rx='2' fill='%2315233B'/%3E%3Crect x='12' y='6' width='8' height='20' rx='2' fill='none' stroke='%2315233B' stroke-width='2.5'/%3E%3Crect x='22' y='16' width='8' height='10' rx='2' fill='%2315233B'/%3E%3C/svg%3E">
+<style>
+:root{
+  --ink:#15233B; --ink-2:#4A5871; --ink-3:#7A869B;
+  --paper:#EDF1F6; --surface:#FFFFFF; --line:#CDD5E0; --line-2:#E3E8EF;
+  --cobalt:#2346D8; --cobalt-ink:#1A36AE; --cobalt-wash:#E6EBFC;
+  --advance:#1E7A55; --advance-wash:#E2F2EA;
+  --nurture:#9A6512; --nurture-wash:#FBF0DC;
+  --disq:#B4352B; --disq-wash:#FAE5E2;
+  --display:"Familjen Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --body:"Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
+  --r-sm:6px; --r:10px;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.55 var(--body);font-variant-numeric:tabular-nums}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.15;margin:0;letter-spacing:-.01em}
+p{margin:0}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--cobalt);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+
+/* Header */
+header.top{padding:28px 0 22px}
+header.top .wrap{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.brand h1{font-size:30px;font-weight:700}
+.brand p{color:var(--ink-2);margin-top:6px;max-width:62ch}
+.top-links{display:flex;gap:18px;font-size:15px}
+.top-links a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--line)}
+.top-links a:hover{color:var(--ink);border-color:var(--ink)}
+
+/* Main layout */
+main .layout{display:grid;grid-template-columns:400px minmax(0,1fr);gap:28px;align-items:start}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+.input{padding:22px;position:sticky;top:16px}
+.field+.field{margin-top:22px}
+.field>.label{display:block;font-weight:700;font-size:15px;margin-bottom:8px}
+.hint{color:var(--ink-2);font-size:14px}
+
+/* Framework picker */
+.fw{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.fw button{border:0;background:var(--surface);padding:10px 4px;font-family:var(--display);font-weight:600;font-size:16px;letter-spacing:.04em;cursor:pointer}
+.fw button+button{border-left:1px solid var(--line)}
+.fw button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.fw button:not([aria-pressed="true"]):hover{background:var(--paper)}
+.fw-blurb{margin-top:8px}
+
+/* Input tabs */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:12px}
+.tabs button{border:0;background:none;padding:8px 10px 9px;cursor:pointer;color:var(--ink-2);font-weight:600;border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--cobalt)}
+textarea{width:100%;min-height:230px;resize:vertical;border:1px solid var(--line);border-radius:var(--r-sm);padding:12px;background:var(--surface);font-size:14.5px;line-height:1.5}
+textarea:focus{border-color:var(--cobalt)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}
+.kind{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:2px}
+.kind button{border:0;background:none;border-radius:999px;padding:3px 12px;font-size:14px;cursor:pointer;color:var(--ink-2)}
+.kind button[aria-pressed="true"]{background:var(--cobalt-wash);color:var(--cobalt-ink);font-weight:600}
+
+.drop{border:1.5px dashed var(--line);border-radius:var(--r);padding:26px 16px;text-align:center;background:var(--paper);cursor:pointer}
+.drop:hover,.drop.over{border-color:var(--cobalt);background:var(--cobalt-wash)}
+.drop strong{display:block;font-size:16px;margin-bottom:4px}
+.drop input{display:none}
+
+.rec{border:1px solid var(--line);border-radius:var(--r);padding:16px;background:var(--paper)}
+.rec-top{display:flex;align-items:center;gap:14px}
+.rec-btn{width:52px;height:52px;border-radius:50%;border:0;background:var(--disq);cursor:pointer;display:grid;place-items:center;flex:none}
+.rec-btn span{width:18px;height:18px;border-radius:50%;background:#fff;transition:border-radius .15s}
+.rec-btn.on span{border-radius:3px}
+.rec-time{font-family:var(--display);font-size:26px;font-weight:600}
+.meter{display:flex;gap:2px;align-items:center;height:28px;margin-top:12px}
+.meter i{flex:1;background:var(--line);border-radius:1px;height:10%}
+.rec audio{width:100%;margin-top:12px}
+
+.progress{margin-top:12px}
+.bar{height:6px;border-radius:3px;background:var(--line-2);overflow:hidden}
+.bar>i{display:block;height:100%;width:0;background:var(--cobalt);transition:width .2s}
+.progress p{font-size:14px;color:var(--ink-2);margin-top:6px}
+
+.consent{font-size:14px;color:var(--ink-2);margin-top:16px;padding-left:12px;border-left:3px solid var(--line)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--ink);background:var(--surface);border-radius:var(--r-sm);padding:9px 14px;font-weight:600;cursor:pointer;font-size:15px}
+.btn:hover{background:var(--paper)}
+.btn.primary{background:var(--cobalt);border-color:var(--cobalt);color:#fff;width:100%;padding:13px;font-size:16px;margin-top:14px}
+.btn.primary:hover{background:var(--cobalt-ink)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn.small{padding:6px 10px;font-size:14px;font-weight:600}
+.btn.quiet{border-color:var(--line)}
+.spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.practice{margin-top:24px;border-top:1px solid var(--line-2);padding-top:18px}
+.practice h2{font-size:17px}
+.practice ul{list-style:none;margin:10px 0 0;padding:0}
+.practice li button{width:100%;text-align:left;border:0;background:none;padding:8px 10px;border-radius:var(--r-sm);cursor:pointer;display:flex;justify-content:space-between;gap:10px;font-size:15px}
+.practice li button:hover{background:var(--paper)}
+.practice li button[aria-current="true"]{background:var(--cobalt-wash);color:var(--cobalt-ink);font-weight:600}
+.practice li small{color:var(--ink-3);font-size:13px;white-space:nowrap}
+
+/* Results */
+.results{min-height:520px}
+.notice{padding:12px 16px;border-radius:var(--r-sm);background:var(--nurture-wash);color:#5E3E09;margin-bottom:16px;font-size:15px}
+.notice.err{background:var(--disq-wash);color:#7D211A}
+
+.empty{padding:40px 36px}
+.empty h2{font-size:24px;margin-top:28px;max-width:28ch}
+.empty p{color:var(--ink-2);margin-top:10px;max-width:56ch}
+.empty ol{margin:18px 0 0;padding-left:20px;color:var(--ink-2);max-width:56ch}
+.empty li+li{margin-top:6px}
+
+/* The letter strip: one tile per framework element, filled by its score */
+.strip{display:flex;gap:8px;flex-wrap:nowrap}
+.tile{--fill:0%;--letter:var(--ink);flex:1 1 0;min-width:0;aspect-ratio:3/4;max-width:92px;border:2.5px solid var(--ink);border-radius:8px;
+  font-family:var(--display);font-weight:700;font-size:clamp(22px,4.4vw,52px);line-height:1;position:relative;overflow:hidden;text-decoration:none;
+  background:linear-gradient(to top,var(--ink) var(--fill),var(--surface) var(--fill))}
+/* The letter is painted with the same split as the tile, so it reads white on the filled part and ink on the empty part */
+.tile>span:first-child{position:absolute;inset:0;display:grid;place-items:center;color:transparent;
+  background:linear-gradient(to top,#fff var(--fill),var(--letter) var(--fill));-webkit-background-clip:text;background-clip:text}
+.tile.s0{border-color:var(--line);--letter:var(--ink-3)}
+.tile.s1{--fill:50%}
+.tile.s2{--fill:100%}
+.tile.ghost{border-style:dashed;border-color:var(--line);--letter:var(--line)}
+a.tile:hover{border-color:var(--cobalt)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:12px;font-size:13.5px;color:var(--ink-2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:12px;height:16px;border:2px solid var(--ink);border-radius:3px;display:inline-block}
+.legend i.l2{background:var(--ink)}
+.legend i.l1{background:linear-gradient(to top,var(--ink) 50%,transparent 50%)}
+.legend i.l0{border-color:var(--line)}
+
+.report{padding:28px 32px 34px}
+.verdict-row{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;flex-wrap:wrap}
+.who{color:var(--ink-2);font-size:15px}
+.verdict{display:inline-block;font-family:var(--display);font-weight:700;font-size:40px;line-height:1;padding:8px 16px 10px;border-radius:8px;margin-top:8px;border:2.5px solid currentColor}
+.verdict.Advance{color:var(--advance);background:var(--advance-wash)}
+.verdict.Nurture{color:var(--nurture);background:var(--nurture-wash)}
+.verdict.Disqualify{color:var(--disq);background:var(--disq-wash)}
+.total{text-align:right}
+.total b{font-family:var(--display);font-size:44px;font-weight:700;line-height:1}
+.total b small{font-size:22px;color:var(--ink-3);font-weight:600}
+.total p{font-size:14.5px;color:var(--ink-2);margin-top:4px}
+.reason{margin-top:16px;font-size:17px;max-width:70ch}
+.summary{margin-top:10px;color:var(--ink-2);max-width:70ch}
+.report .strip{margin-top:26px}
+.split-note{font-size:14px;color:var(--ink-2);margin-top:14px;max-width:70ch}
+
+section.block{margin-top:34px}
+section.block>h3{font-size:20px;margin-bottom:12px}
+.elements{list-style:none;margin:0;padding:0;border-top:1px solid var(--line-2)}
+.el{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:4px 16px;padding:16px 0;border-bottom:1px solid var(--line-2);scroll-margin-top:16px}
+.el .tile{width:44px;max-width:none;font-size:22px;border-width:2px;border-radius:6px}
+.el h4{margin:0;font-family:var(--display);font-size:17px;font-weight:600}
+.el .ask{font-size:14px;color:var(--ink-3)}
+.el .pts{font-family:var(--display);font-weight:600;font-size:15px;white-space:nowrap;color:var(--ink-2)}
+.el .body{grid-column:2/4}
+.el blockquote{margin:10px 0 0;padding:2px 0 2px 12px;border-left:3px solid var(--ink);font-style:italic}
+.el .none{margin-top:10px;font-size:14.5px;color:var(--disq)}
+.el .gap{margin-top:8px;color:var(--ink-2);font-size:15px}
+.el:target{background:var(--cobalt-wash)}
+
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.cols section.block{margin-top:34px}
+ol.q,ul.l{margin:0;padding-left:20px}
+ol.q li,ul.l li{margin-bottom:8px}
+ol.q li{padding-left:4px}
+ol.q li::marker{font-family:var(--display);font-weight:600;color:var(--cobalt)}
+
+.crm{border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.crm-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;background:var(--paper);border-bottom:1px solid var(--line)}
+.crm-head h3{font-size:18px}
+.crm dl{margin:0;display:grid;grid-template-columns:170px minmax(0,1fr)}
+.crm dt,.crm dd{margin:0;padding:9px 16px;border-bottom:1px solid var(--line-2);font-size:15px}
+.crm dt{color:var(--ink-2);font-weight:600}
+.crm dd.nd{color:var(--ink-3)}
+.crm dl>*:nth-last-child(-n+2){border-bottom:0}
+
+/* History */
+.history{margin:36px 0 0;padding:24px;min-width:0}
+.history-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.history-head h2{font-size:22px}
+.history-head div{display:flex;gap:8px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th{text-align:left;font-weight:600;color:var(--ink-2);padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:10px;border-bottom:1px solid var(--line-2);vertical-align:top}
+td .tag{font-family:var(--display);font-weight:600}
+td.v-Advance{color:var(--advance);font-weight:700}
+td.v-Nurture{color:var(--nurture);font-weight:700}
+td.v-Disqualify{color:var(--disq);font-weight:700}
+.table-wrap{overflow-x:auto}
+.history .empty-row{color:var(--ink-2);padding:6px 0}
+
+footer{padding:36px 0 48px;color:var(--ink-2);font-size:14.5px}
+footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+footer p{max-width:70ch}
+footer a{color:inherit}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:var(--r-sm);opacity:0;pointer-events:none;transition:.2s;font-size:15px;z-index:10}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media (max-width:980px){
+  main .layout{grid-template-columns:1fr}
+  .input{position:static}
+}
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  .brand h1{font-size:25px}
+  .input{padding:18px}
+  .report{padding:20px 16px 26px}
+  .empty{padding:28px 18px}
+  .strip{gap:5px}
+  .tile{border-width:2px;border-radius:6px}
+  .verdict{font-size:30px}
+  .total{text-align:left}
+  .total b{font-size:36px}
+  .cols{grid-template-columns:1fr;gap:0}
+  .crm dl{grid-template-columns:1fr}
+  .crm dt{border-bottom:0;padding-bottom:0}
+  .history{padding:18px 16px}
+  th:nth-child(3),td:nth-child(3){display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <h1>Discovery Call Analyser</h1>
+      <p>Score how well a sales lead was qualified, see the questions that were missed, and get next steps and CRM notes in about a minute.</p>
+    </div>
+    <nav class="top-links" aria-label="Project links">
+      <a href="#history">History</a>
+      <a href="https://github.com/Juliet6364/discovery-call-analyser-v2" rel="noopener">Source code</a>
+      <a href="https://www.linkedin.com/in/juliet-arambam1" rel="noopener">Juliet Arambam</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap layout">
+    <!-- Input -->
+    <form class="panel input" id="form" novalidate>
+      <div class="field">
+        <span class="label" id="fw-label">Qualification framework</span>
+        <div class="fw" role="group" aria-labelledby="fw-label" id="fw"></div>
+        <p class="hint fw-blurb" id="fw-blurb"></p>
+      </div>
+
+      <div class="field">
+        <span class="label">Conversation</span>
+        <div class="tabs" role="tablist" aria-label="How to add the conversation">
+          <button type="button" role="tab" id="tab-paste" aria-controls="pane-paste" aria-selected="true">Paste text</button>
+          <button type="button" role="tab" id="tab-file" aria-controls="pane-file" aria-selected="false" tabindex="-1">Upload a file</button>
+          <button type="button" role="tab" id="tab-rec" aria-controls="pane-rec" aria-selected="false" tabindex="-1">Record</button>
+        </div>
+
+        <div role="tabpanel" id="pane-paste" aria-labelledby="tab-paste">
+          <label for="text" class="sr">Transcript or chat</label>
+          <textarea id="text" placeholder="Paste a call transcript or a WhatsApp, LinkedIn or email thread.&#10;&#10;Rep: Thanks for the time today…&#10;Buyer: Happy to…"></textarea>
+          <div class="row">
+            <div class="kind" role="group" aria-label="Type of conversation" id="kind">
+              <button type="button" data-kind="call" aria-pressed="true">Call</button>
+              <button type="button" data-kind="chat" aria-pressed="false">Written chat</button>
+            </div>
+            <span class="hint" id="count">0 words</span>
+          </div>
+        </div>
+
+        <div role="tabpanel" id="pane-file" aria-labelledby="tab-file" hidden>
+          <label class="drop" id="drop">
+            <input type="file" id="file" accept=".txt,text/plain,audio/*,.mp3,.m4a,.wav,.webm,.ogg,.aac,.flac,.mp4">
+            <strong>Choose a transcript or recording</strong>
+            <span class="hint">A .txt transcript, or audio such as .mp3, .m4a or .wav. Drag it here or click to browse.</span>
+          </label>
+          <div class="progress" id="file-progress" hidden>
+            <div class="bar"><i></i></div><p></p>
+          </div>
+        </div>
+
+        <div role="tabpanel" id="pane-rec" aria-labelledby="tab-rec" hidden>
+          <div class="rec">
+            <div class="rec-top">
+              <button type="button" class="rec-btn" id="rec-btn" aria-label="Start recording"><span></span></button>
+              <div>
+                <div class="rec-time" id="rec-time">00:00</div>
+                <div class="hint" id="rec-hint">Record a role-play using your microphone.</div>
+              </div>
+            </div>
+            <div class="meter" id="meter" aria-hidden="true"></div>
+            <div id="rec-after" hidden>
+              <audio controls id="rec-audio"></audio>
+              <button type="button" class="btn small" id="rec-go" style="margin-top:10px">Transcribe recording</button>
+            </div>
+            <div class="progress" id="rec-progress" hidden>
+              <div class="bar"><i></i></div><p></p>
+            </div>
+          </div>
+        </div>
+        <p class="hint" style="margin-top:10px" id="audio-note">Recordings are transcribed on your device. The audio is never uploaded.</p>
+      </div>
+
+      <p class="consent">Use role-played calls, or calls where everyone has agreed to be recorded and reviewed. Don't paste real customer conversations without consent.</p>
+      <button type="submit" class="btn primary" id="go">Analyse conversation</button>
+
+      <div class="practice">
+        <h2>Practice conversations</h2>
+        <p class="hint" style="margin-top:4px">Fictional role-plays with saved results, so you can try the tool straight away.</p>
+        <ul id="practice"></ul>
+      </div>
+    </form>
+
+    <!-- Results -->
+    <div class="panel results" id="results" aria-live="polite"></div>
+  </div>
+
+  <section class="wrap" aria-labelledby="h-history">
+    <div class="panel history" id="history">
+      <div class="history-head">
+        <h2 id="h-history">History</h2>
+        <div>
+          <button type="button" class="btn small" id="csv">Download CSV</button>
+          <button type="button" class="btn small quiet" id="clear">Clear history</button>
+        </div>
+      </div>
+      <p class="hint" style="margin-bottom:12px">Saved in this browser only. Nothing is stored on a server.</p>
+      <div class="table-wrap" id="history-body"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>The score shows how well the rep qualified the lead. The verdict shows whether the deal is worth pursuing. A well-run call can still end in Disqualify. Results are advice: a person makes the final call on the deal.</p>
+    <p>Built by Juliet Arambam with Claude.</p>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="frameworks.js"></script>
+<script src="samples.js"></script>
+<script>
+(() => {
+const { FRAMEWORKS, CRM_FIELDS, band } = window.DCA;
+const PRACTICE = window.PRACTICE || [];
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch { return false; } }
+};
+
+const state = {
+  framework: store.get("dca2.framework", "MEDDICC"),
+  kind: "call",          // call | chat
+  fromAudio: false,      // transcript came from a recording
+  practice: null,        // practice conversation currently loaded
+  result: null,
+  busy: false
+};
+if (!FRAMEWORKS[state.framework]) state.framework = "MEDDICC";
+
+const text = $("#text");
+let toastTimer;
+function toast(msg) {
+  const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 2400);
+}
+
+/* ---------- Framework picker ---------- */
+function renderFramework() {
+  $("#fw").innerHTML = Object.keys(FRAMEWORKS).map(k =>
+    `<button type="button" data-fw="${k}" aria-pressed="${k === state.framework}">${k}</button>`).join("");
+  $("#fw-blurb").textContent = FRAMEWORKS[state.framework].blurb;
+}
+$("#fw").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-fw]"); if (!b || state.busy) return;
+  state.framework = b.dataset.fw; store.set("dca2.framework", state.framework);
+  renderFramework();
+  if (state.practice && text.value.trim() === state.practice.text) showPractice(state.practice);
+  else if (state.result && state.result.framework !== state.framework) renderEmpty(`Run the analysis again to score it with ${state.framework}.`);
+  else if (!state.result) renderEmpty();
+});
+
+/* ---------- Tabs ---------- */
+const tabs = [...document.querySelectorAll('[role="tab"]')];
+function selectTab(tab) {
+  tabs.forEach(t => {
+    const on = t === tab;
+    t.setAttribute("aria-selected", on); t.tabIndex = on ? 0 : -1;
+    $("#" + t.getAttribute("aria-controls")).hidden = !on;
+  });
+}
+tabs.forEach((t, i) => {
+  t.addEventListener("click", () => selectTab(t));
+  t.addEventListener("keydown", (e) => {
+    const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+    if (d) { const n = tabs[(i + d + tabs.length) % tabs.length]; n.focus(); selectTab(n); }
+  });
+});
+
+/* ---------- Text box ---------- */
+function setKind(kind) {
+  state.kind = kind;
+  document.querySelectorAll("#kind button").forEach(b => b.setAttribute("aria-pressed", b.dataset.kind === kind));
+}
+$("#kind").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) setKind(b.dataset.kind); });
+function updateCount() {
+  const n = (text.value.trim().match(/\S+/g) || []).length;
+  $("#count").textContent = `${n.toLocaleString("en-IN")} word${n === 1 ? "" : "s"}`;
+}
+text.addEventListener("input", () => {
+  updateCount();
+  if (state.practice && text.value.trim() !== state.practice.text) { state.practice = null; renderPractice(); }
+  if (!text.value.trim()) state.fromAudio = false;
+});
+function loadText(value, { kind = "call", fromAudio = false } = {}) {
+  text.value = value; state.fromAudio = fromAudio; setKind(kind); updateCount();
+  selectTab($("#tab-paste"));
+}
+
+/* ---------- Practice conversations ---------- */
+function renderPractice() {
+  $("#practice").innerHTML = PRACTICE.map(p => {
+    const c = p.saved.crm;
+    return `<li><button type="button" data-id="${p.id}" aria-current="${state.practice?.id === p.id}">
+      <span>${esc(p.label)}</span><small>${esc(c.company)}</small></button></li>`;
+  }).join("");
+}
+$("#practice").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-id]"); if (!b || state.busy) return;
+  const p = PRACTICE.find(x => x.id === b.dataset.id);
+  state.practice = p; loadText(p.text, { kind: p.source === "chat" ? "chat" : "call" });
+  renderPractice(); showPractice(p, true);
+});
+function practiceResult(p, fw) {
+  const f = p.saved.frameworks[fw];
+  const total = f.scores.reduce((t, s) => t + s.score, 0);
+  return { ...p.saved, framework: fw, scores: f.scores, missed_questions: f.missed_questions,
+    total, max: FRAMEWORKS[fw].elements.length * 2, source: p.source, practice: true };
+}
+function showPractice(p, scroll) {
+  const r = practiceResult(p, state.framework);
+  state.result = r; renderResult(r, { label: p.label });
+  saveHistory(r, p.label);
+  if (scroll) scrollToResults();
+}
+
+/* ---------- Results ---------- */
+function stripHTML(fw, scores, linked) {
+  return `<div class="strip">${FRAMEWORKS[fw].elements.map((el, i) => {
+    const s = scores ? scores[i].score : null;
+    const cls = s == null ? "ghost" : "s" + s;
+    const label = s == null ? el.name : `${el.name}: ${s} of 2`;
+    return linked
+      ? `<a class="tile ${cls}" href="#el-${i}" title="${esc(label)}" aria-label="${esc(label)}"><span>${el.letter}</span></a>`
+      : `<div class="tile ${cls}" title="${esc(label)}"><span aria-hidden="true">${el.letter}</span><span class="sr">${esc(label)}</span></div>`;
+  }).join("")}</div>`;
+}
+const legend = `<div class="legend" aria-hidden="true"><span><i class="l2"></i>Clearly established</span><span><i class="l1"></i>Partly covered</span><span><i class="l0"></i>Not covered</span></div>`;
+
+function renderEmpty(note) {
+  const fw = FRAMEWORKS[state.framework];
+  $("#results").innerHTML = `<div class="empty">
+    ${note ? `<div class="notice">${esc(note)}</div>` : ""}
+    ${stripHTML(state.framework, null)}
+    <h2>Each ${fw.name} element fills in as the call covers it</h2>
+    <p>${fw.elements.map(e => `<b>${esc(e.name)}</b>`).join(", ")}. Every score comes with a quote from the conversation, so you can check why it was given.</p>
+    <ol>
+      <li>Pick a practice conversation to see a saved result straight away.</li>
+      <li>Or add your own role-play: paste the transcript, upload a file, or record it here.</li>
+      <li>Copy the CRM notes, or download all your results as a CSV.</li>
+    </ol>
+  </div>`;
+}
+
+function renderResult(r, meta = {}) {
+  const fw = FRAMEWORKS[r.framework];
+  const b = band(r.total, r.max);
+  const c = r.crm || {};
+  const who = [c.contact, c.role, c.company].filter(v => v && v !== "Not discussed").join(", ");
+  const srcLabel = r.source === "chat" ? "Written chat" : r.source === "audio" ? "Recorded call" : "Call transcript";
+  const els = fw.elements.map((el, i) => {
+    const s = r.scores[i];
+    return `<li class="el" id="el-${i}">
+      <div class="tile s${s.score}" aria-hidden="true"><span>${el.letter}</span></div>
+      <div><h4>${esc(el.name)}</h4><div class="ask">${esc(el.ask)}</div></div>
+      <div class="pts">${s.score} of 2</div>
+      <div class="body">
+        ${s.evidence ? `<blockquote>“${esc(s.evidence)}”</blockquote>` : `<p class="none">Not covered in the conversation.</p>`}
+        ${s.gap ? `<p class="gap">${esc(s.gap)}</p>` : ""}
+      </div>
+    </li>`;
+  }).join("");
+  const li = (a, cls) => a && a.length ? `<${cls === "q" ? "ol" : "ul"} class="${cls}">${a.map(x => `<li>${esc(x)}</li>`).join("")}</${cls === "q" ? "ol" : "ul"}>` : `<p class="hint">None.</p>`;
+  const crm = CRM_FIELDS.map(([k, label]) => {
+    const v = c[k] || "Not discussed";
+    return `<dt>${label}</dt><dd class="${v === "Not discussed" ? "nd" : ""}">${esc(v)}</dd>`;
+  }).join("");
+
+  $("#results").innerHTML = `<article class="report">
+    ${r.practice ? `<div class="notice">Saved result for a practice conversation. Edit the text or add your own to run a live analysis.</div>` : ""}
+    <div class="verdict-row">
+      <div>
+        <p class="who">${esc(who || meta.label || "Conversation")}. ${srcLabel}, scored with ${fw.name}.</p>
+        <div class="verdict ${r.verdict}">${r.verdict}</div>
+      </div>
+      <div class="total">
+        <b>${r.total}<small> / ${r.max}</small></b>
+        <p>${b.label}</p>
+      </div>
+    </div>
+    <p class="reason">${esc(r.verdict_reason)}</p>
+    <p class="summary">${esc(r.summary)}</p>
+    ${stripHTML(r.framework, r.scores, true)}
+    ${legend}
+
+    <section class="block" aria-labelledby="h-els">
+      <h3 id="h-els">How each element was covered</h3>
+      <ul class="elements">${els}</ul>
+    </section>
+
+    <div class="cols">
+      <section class="block"><h3>Questions to ask next</h3>${li(r.missed_questions, "q")}</section>
+      <section class="block"><h3>Next steps</h3>${li(r.next_steps, "l")}</section>
+      <section class="block"><h3>What went well</h3>${li(r.strengths, "l")}</section>
+      <section class="block"><h3>Coaching points</h3>${li(r.improve, "l")}</section>
+    </div>
+
+    <section class="block crm">
+      <div class="crm-head"><h3>CRM notes</h3><button type="button" class="btn small" id="copy">Copy notes</button></div>
+      <dl>${crm}</dl>
+    </section>
+  </article>`;
+  $("#copy").addEventListener("click", () => copyNotes(r));
+}
+
+function crmText(r) {
+  const fw = FRAMEWORKS[r.framework];
+  return [
+    ...CRM_FIELDS.map(([k, label]) => `${label}: ${r.crm[k] || "Not discussed"}`),
+    `${fw.name} score: ${r.total}/${r.max} (${band(r.total, r.max).label})`,
+    `Verdict: ${r.verdict}. ${r.verdict_reason}`,
+    `Questions for next call:`, ...r.missed_questions.map(q => `- ${q}`)
+  ].join("\n");
+}
+async function copyNotes(r) {
+  try { await navigator.clipboard.writeText(crmText(r)); toast("CRM notes copied"); }
+  catch { toast("Couldn't copy. Select the notes and copy them manually."); }
+}
+function scrollToResults() {
+  const top = $("#results").getBoundingClientRect().top;
+  if (window.matchMedia("(max-width:980px)").matches || top < 0) $("#results").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+/* ---------- Live analysis ---------- */
+function setBusy(on, label) {
+  state.busy = on;
+  const go = $("#go");
+  go.disabled = on;
+  go.innerHTML = on ? `<span class="spin" aria-hidden="true"></span>${esc(label || "Analysing…")}` : "Analyse conversation";
+}
+$("#form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (state.busy) return;
+  const value = text.value.trim();
+  if (state.practice && value === state.practice.text) { showPractice(state.practice, true); return; }
+  if (!value) { selectTab($("#tab-paste")); text.focus(); toast("Add a conversation first"); return; }
+  if (value.length < 80) { toast("This conversation is too short to score"); return; }
+
+  setBusy(true, "Analysing, about a minute…");
+  const fw = state.framework;
+  $("#results").innerHTML = `<div class="empty">${stripHTML(fw, null)}<h2>Reading the conversation</h2><p>Checking each ${fw} element and pulling quotes as evidence. This usually takes under a minute.</p></div>`;
+  scrollToResults();
+  try {
+    const res = await fetch("/api/analyze", {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ transcript: value, framework: fw, source: state.fromAudio ? "audio" : state.kind })
+    });
+    let data = {};
+    try { data = await res.json(); } catch {}
+    if (!res.ok) {
+      const msg = data.message || `The analysis failed (error ${res.status}). Try again.`;
+      $("#results").innerHTML = `<div class="empty"><div class="notice ${data.code === "not_configured" ? "" : "err"}">${esc(msg)}</div>${stripHTML(fw, null)}<h2>${data.code === "not_configured" ? "Try a practice conversation" : "No result this time"}</h2><p>${data.code === "not_configured" ? "Practice conversations show a saved analysis for every framework without needing live analysis." : "Your text is still in the box, so you can run it again."}</p></div>`;
+      return;
+    }
+    state.result = data;
+    renderResult(data, {});
+    saveHistory(data, data.crm?.company && data.crm.company !== "Not discussed" ? data.crm.company : "Your conversation");
+    toast("Analysis ready");
+  } catch {
+    $("#results").innerHTML = `<div class="empty"><div class="notice err">Couldn't reach the server. Check your connection and try again. Your text is still in the box.</div>${stripHTML(fw, null)}</div>`;
+  } finally {
+    setBusy(false);
+  }
+});
+
+/* ---------- History and CSV ---------- */
+const HKEY = "dca2.history";
+function saveHistory(r, label) {
+  const list = store.get(HKEY, []);
+  const id = r.practice ? `practice:${label}:${r.framework}` : `live:${Date.now()}`;
+  const entry = { id, at: new Date().toISOString(), label, result: r };
+  const next = [entry, ...list.filter(x => x.id !== id)].slice(0, 60);
+  store.set(HKEY, next); renderHistory();
+}
+function renderHistory() {
+  const list = store.get(HKEY, []);
+  $("#csv").disabled = !list.length; $("#clear").disabled = !list.length;
+  if (!list.length) { $("#history-body").innerHTML = `<p class="empty-row">No analyses yet. Results appear here as you run them.</p>`; return; }
+  $("#history-body").innerHTML = `<table><thead><tr><th>Conversation</th><th>Score</th><th>Saved</th><th>Verdict</th><th><span class="sr">Actions</span></th></tr></thead><tbody>${
+    list.map(x => {
+      const r = x.result;
+      const when = new Date(x.at).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
+      return `<tr>
+        <td>${esc(x.label)}${r.practice ? ' <span class="hint">(practice)</span>' : ""}<div class="hint">${esc(r.crm?.contact || "")}${r.crm?.role && r.crm.role !== "Not discussed" ? ", " + esc(r.crm.role) : ""}</div></td>
+        <td><span class="tag">${r.framework}</span> ${r.total}/${r.max}</td>
+        <td>${esc(when)}</td>
+        <td class="v-${r.verdict}">${r.verdict}</td>
+        <td style="white-space:nowrap;text-align:right"><button type="button" class="btn small quiet" data-open="${esc(x.id)}">Open</button></td>
+      </tr>`;
+    }).join("")}</tbody></table>`;
+}
+$("#history-body").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-open]"); if (!b) return;
+  const x = store.get(HKEY, []).find(h => h.id === b.dataset.open); if (!x) return;
+  state.result = x.result; renderResult(x.result, { label: x.label });
+  $("#results").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+$("#clear").addEventListener("click", () => {
+  if (!confirm("Clear all saved analyses from this browser?")) return;
+  store.set(HKEY, []); renderHistory(); toast("History cleared");
+});
+$("#csv").addEventListener("click", () => {
+  const list = store.get(HKEY, []);
+  const head = ["Date", "Conversation", "Practice", "Source", "Framework", "Score", "Max", "Band", "Verdict", "Verdict reason", "Element scores",
+    ...CRM_FIELDS.map(([, l]) => l), "Questions to ask next", "Next steps"];
+  const q = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const rows = list.map(x => {
+    const r = x.result, fw = FRAMEWORKS[r.framework];
+    return [x.at.slice(0, 16).replace("T", " "), x.label, r.practice ? "Yes" : "No", r.source || "call", r.framework, r.total, r.max,
+      band(r.total, r.max).label, r.verdict, r.verdict_reason,
+      fw.elements.map((el, i) => `${el.name} ${r.scores[i].score}`).join("; "),
+      ...CRM_FIELDS.map(([k]) => r.crm?.[k] || ""), (r.missed_questions || []).join(" | "), (r.next_steps || []).join(" | ")].map(q).join(",");
+  });
+  const blob = new Blob(["﻿" + [head.map(q).join(","), ...rows].join("\r\n")], { type: "text/csv;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = `discovery-call-analyses-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+});
+
+/* ---------- Audio: decode, then transcribe on the device ---------- */
+let worker = null;
+function getWorker() {
+  if (!worker) worker = new Worker("transcribe-worker.js", { type: "module" });
+  return worker;
+}
+async function decode(blob) {
+  const buf = await blob.arrayBuffer();
+  const Ctx = window.AudioContext || window.webkitAudioContext;
+  const ctx = new Ctx({ sampleRate: 16000 });
+  try {
+    const audio = await ctx.decodeAudioData(buf);
+    const n = audio.numberOfChannels, len = audio.length;
+    const mono = new Float32Array(len);
+    for (let c = 0; c < n; c++) { const d = audio.getChannelData(c); for (let i = 0; i < len; i++) mono[i] += d[i] / n; }
+    return mono;
+  } finally { ctx.close(); }
+}
+function fmtMB(b) { return (b / 1048576).toFixed(0) + " MB"; }
+function fmtTime(s) { return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(Math.floor(s % 60)).padStart(2, "0")}`; }
+
+async function transcribe(blob, ui) {
+  if (state.busy) return;
+  const box = $(ui), bar = box.querySelector(".bar i"), msg = box.querySelector("p");
+  const set = (pct, m) => { box.hidden = false; bar.style.width = pct + "%"; msg.textContent = m; };
+  setBusy(true, "Transcribing…");
+  try {
+    set(2, "Reading the audio…");
+    let audio;
+    try { audio = await decode(blob); }
+    catch { throw new Error("This audio format can't be read in this browser. Try an .mp3, .m4a or .wav file."); }
+    const mins = audio.length / 16000 / 60;
+    if (mins > 45) throw new Error(`This recording is ${Math.round(mins)} minutes long. Use a recording under 45 minutes.`);
+    const result = await new Promise((resolve, reject) => {
+      const w = getWorker();
+      w.onmessage = ({ data }) => {
+        if (data.type === "stage" && data.stage === "loading") set(4, "Preparing speech recognition. The first time, this downloads about 80 MB and is then saved in your browser.");
+        if (data.type === "download") set(4 + 26 * (data.total ? data.loaded / data.total : 0), `Downloading speech recognition: ${fmtMB(data.loaded)} of ${fmtMB(data.total)}`);
+        if (data.type === "stage" && data.stage === "transcribing") set(30, `Transcribing ${fmtTime(audio.length / 16000)} of audio${data.device === "webgpu" ? " using your graphics chip" : ""}…`);
+        if (data.type === "partial") { set(30 + 70 * data.done / data.parts, `Transcribed ${data.done} of ${data.parts} minute${data.parts === 1 ? "" : "s"}…`); loadText(data.text, { fromAudio: true }); }
+        if (data.type === "done") resolve(data.text);
+        if (data.type === "error") reject(new Error("Speech recognition failed: " + data.message));
+      };
+      w.onerror = () => reject(new Error("Speech recognition couldn't start in this browser. Try a recent version of Chrome, Edge or Firefox."));
+      w.postMessage({ type: "transcribe", audio }, [audio.buffer]);
+    });
+    if (!result.trim()) throw new Error("No speech was found in this recording.");
+    state.practice = null; renderPractice();
+    loadText(result, { fromAudio: true });
+    set(100, "Done. Speaker names aren't detected: add them in the text if you like, then analyse.");
+    toast("Transcript ready");
+    text.focus();
+  } catch (e) {
+    set(0, e.message);
+    if (worker) { worker.terminate(); worker = null; }
+  } finally {
+    setBusy(false);
+  }
+}
+
+/* File upload */
+const drop = $("#drop"), fileInput = $("#file");
+async function handleFile(f) {
+  if (!f) return;
+  const isText = /\.txt$/i.test(f.name) || f.type === "text/plain";
+  if (isText) {
+    if (f.size > 500000) { toast("That file is too large for a transcript"); return; }
+    const t = await f.text();
+    state.practice = null; renderPractice();
+    loadText(t.trim(), { kind: /\[\w{3} \d{1,2}:\d{2}\]|^\[?\d{1,2}\/\d{1,2}\/\d{2,4}/m.test(t) ? "chat" : "call" });
+    toast(`Loaded ${f.name}`);
+  } else if (/^audio\/|^video\//.test(f.type) || /\.(mp3|m4a|wav|webm|ogg|aac|flac|mp4)$/i.test(f.name)) {
+    if (f.size > 200 * 1048576) { toast("Use an audio file under 200 MB"); return; }
+    transcribe(f, "#file-progress");
+  } else {
+    toast("Use a .txt transcript or an audio file");
+  }
+}
+fileInput.addEventListener("change", () => { handleFile(fileInput.files[0]); fileInput.value = ""; });
+["dragenter", "dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
+["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", e => handleFile(e.dataTransfer.files[0]));
+
+/* Recording */
+const meter = $("#meter");
+meter.innerHTML = "<i></i>".repeat(40);
+let rec = null, recBlob = null;
+$("#rec-btn").addEventListener("click", async () => {
+  if (state.busy) return;
+  if (rec) { rec.stop(); return; }
+  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) { $("#rec-hint").textContent = "Recording isn't supported in this browser. Record on your phone and upload the file instead."; return; }
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }); }
+  catch { $("#rec-hint").textContent = "Microphone access was blocked. Allow it in your browser's site settings, then try again."; return; }
+  const chunks = [];
+  const mr = new MediaRecorder(stream);
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const an = ctx.createAnalyser(); an.fftSize = 256; ctx.createMediaStreamSource(stream).connect(an);
+  const levels = new Uint8Array(an.fftSize), bars = [...meter.children], hist = [];
+  const t0 = Date.now(); let raf;
+  const tick = () => {
+    an.getByteTimeDomainData(levels);
+    let peak = 0; for (const v of levels) peak = Math.max(peak, Math.abs(v - 128));
+    hist.push(Math.min(1, peak / 70)); if (hist.length > bars.length) hist.shift();
+    bars.forEach((b, i) => { const v = hist[i - (bars.length - hist.length)] ?? 0; b.style.height = (10 + v * 90) + "%"; b.style.background = v > .05 ? "var(--ink)" : ""; });
+    $("#rec-time").textContent = fmtTime((Date.now() - t0) / 1000);
+    raf = requestAnimationFrame(tick);
+  };
+  mr.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+  mr.onstop = () => {
+    cancelAnimationFrame(raf); stream.getTracks().forEach(t => t.stop()); ctx.close();
+    recBlob = new Blob(chunks, { type: mr.mimeType || "audio/webm" });
+    $("#rec-audio").src = URL.createObjectURL(recBlob);
+    $("#rec-after").hidden = false;
+    $("#rec-btn").classList.remove("on"); $("#rec-btn").setAttribute("aria-label", "Start a new recording");
+    $("#rec-hint").textContent = "Listen back, then transcribe it. Recording again replaces this one.";
+    rec = null;
+  };
+  mr.start(1000); rec = mr; tick();
+  $("#rec-after").hidden = true;
+  $("#rec-btn").classList.add("on"); $("#rec-btn").setAttribute("aria-label", "Stop recording");
+  $("#rec-hint").textContent = "Recording. Play both the rep and the buyer, then press stop.";
+});
+$("#rec-go").addEventListener("click", () => recBlob && transcribe(recBlob, "#rec-progress"));
+
+/* ---------- Start ---------- */
+renderFramework(); renderPractice(); renderHistory(); updateCount();
+renderEmpty();
+})();
+</script>
+</body>
+</html>

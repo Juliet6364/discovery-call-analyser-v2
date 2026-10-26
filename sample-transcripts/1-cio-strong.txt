@@ -1,0 +1,24 @@
+Juliet (Nexora Automation): Hi Sanjay, thank you for the time. I've kept 30 minutes. I'd like to understand your order-to-cash process and your automation plans, and at the end we can decide together whether a next step makes sense. Does that work?
+Sanjay (CIO, Vardhan Auto Components): Works. Go ahead.
+Juliet: When we spoke briefly at the CII event, you mentioned order processing was a bottleneck. What's happening there today?
+Sanjay: We get about 40,000 sales orders a month from OEM customers, mostly PDF purchase orders by email. A 22-person shared services team keys them into SAP S/4HANA.
+Juliet: What does that cost the business?
+Sanjay: The error rate is around 3%, which means wrong shipments and credit notes. About 6% of orders go out late. And our DSO is 68 days, partly because of invoice disputes caused by those errors.
+Juliet: If this project succeeds, how will you measure it?
+Sanjay: 80% of orders touchless, and DSO down to 55 days by the end of the financial year. Both are on my KRA sheet and the CFO's.
+Juliet: Who owns the budget for this?
+Sanjay: The CFO, Ramesh Gupta, and I co-own a 1.2 crore digital transformation budget. Anything above 1 crore also needs our MD's approval.
+Juliet: What will you use to compare vendors?
+Sanjay: A certified SAP connector, bots that can run on-premise because of our OEM contracts, help setting up an automation CoE, and payback within 12 months.
+Juliet: Walk me through how a decision gets made, from now to signature.
+Sanjay: A 6-week proof of value on one product line. Results go to our steering committee in the second week of December. Then MD approval, then procurement.
+Juliet: And on the paperwork side, what does procurement involve?
+Sanjay: Vendor onboarding takes about four weeks. InfoSec does an audit, and legal will need a data processing agreement. Last time the DPA alone took three weeks.
+Juliet: Who else are you talking to?
+Sanjay: A UiPath partner. And my own IT team thinks they can do it with Power Automate, since it's already in our Microsoft licence.
+Juliet: What would make the in-house option win?
+Sanjay: Cost. But they've never automated anything at this volume, and I can't risk the DSO target.
+Juliet: Who on your team would run the proof of value day to day?
+Sanjay: Deepa Nair, who heads shared services. She's fed up with the manual work and she'll push for whatever works.
+Juliet: Could we hold a two-hour scoping workshop with Deepa and someone from InfoSec, so security is part of the plan from day one?
+Sanjay: Yes. Let's do 4th November, 11 am. I'll add Deepa and our InfoSec lead.

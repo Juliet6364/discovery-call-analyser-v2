@@ -1,0 +1,18 @@
+Juliet (Nexora Automation): Hi Anil, thanks for taking my call. You downloaded our report on process mining in healthcare, so I wanted to understand what prompted that.
+Anil (Head of IT, CareWell Hospitals): Our board wants to know why patient discharge takes so long. Average discharge time is over 6 hours across our 14 hospitals.
+Juliet: What's the impact of that for CareWell?
+Anil: Beds stay blocked, so we turn away admissions from emergency. Patients complain in Google reviews too. Nobody can tell me exactly where the delay sits: billing, pharmacy, insurance approval or the doctor's sign-off.
+Juliet: So the first need is visibility, before any automation?
+Anil: Exactly. The data is in our HIS, the billing system and the TPA portal, but nobody has joined it up.
+Juliet: If you had that visibility, what target would you set?
+Anil: The medical director wants discharge under 3 hours. I haven't been given a revenue number.
+Juliet: How would a project like this get approved?
+Anil: I'd write a business case. Our CEO, Dr. Suresh Menon, approves IT spend above 25 lakh. Below that, I can approve it myself.
+Juliet: What would the business case need to show?
+Anil: That it works with our HIS, which is an older on-prem system, that patient data never leaves our servers, and quick results, within three months.
+Juliet: And the steps after the business case?
+Anil: CEO review, then our IT committee, which meets monthly. Purchasing goes through our central procurement team.
+Juliet: Great. Let me show you a sample discharge process map from another hospital group. You can see exactly where cases wait.
+Anil: This is the kind of view the board wants.
+Juliet: I'll send you a proposal for a pilot at two hospitals next week.
+Anil: Okay, send it across.
