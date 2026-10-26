@@ -5,7 +5,11 @@ An AI coach for B2B sales discovery calls. Add a conversation, and it:
 - **Scores how well the lead was qualified** with **MEDDICC**, **BANT** or **SPICED**, quoting the conversation as evidence for every score
 - **Flags what wasn't asked** and gives the exact questions to ask on the next call
 - **Recommends a verdict** (Advance, Nurture or Disqualify) and next steps
+- **Highlights the transcript**, tagging each quote with the element it supports
+- **Drafts the follow-up email** to the buyer, ready to copy or open in your email app
 - **Writes CRM notes**, ready to copy or export with your history as CSV
+- **Saves a PDF report** of the scorecard, transcript, email and CRM notes
+- **Tracks progress**: average score over time and the elements you miss most often
 
 Conversations can be **pasted**, uploaded as a **.txt** file, uploaded as an **audio recording**, or **recorded in the browser**. Audio is transcribed on the user's own device, so recordings are never uploaded.
 
@@ -19,6 +23,8 @@ Version 1, built for my Business Analyst with Applied AI course, is at [discover
 | Frameworks | MEDDICC | MEDDICC, BANT, SPICED |
 | AI output | JSON parsed from free text | Forced tool call with a JSON schema, then validated |
 | Demo mode | Saved MEDDICC results for 5 calls | Saved results for 6 conversations in all 3 frameworks |
+| Outputs | Scorecard, CRM notes | Adds highlighted transcript, follow-up email draft and PDF report |
+| Progress | History table | History plus a dashboard: score trend and most-missed elements |
 | Tests | None | Automated tests for validation, scoring bands and the API |
 
 ## How it works

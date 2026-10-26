@@ -9,6 +9,7 @@ const good = (fw) => ({
   summary: "s", verdict: "Advance", verdict_reason: "r",
   scores: FRAMEWORKS[fw].elements.map(e => ({ element: e.name, score: 2, evidence: "q", gap: "g" })),
   missed_questions: ["a", "b"], next_steps: ["x"], strengths: ["y"], improve: ["z"],
+  follow_up_email: { subject: "Hi", body: "Thanks" },
   crm: { company: "Acme" }
 });
 
@@ -29,6 +30,9 @@ test("validate keeps good output and totals it", () => {
   const r = validate(good("BANT"), "BANT");
   assert.equal(r.total, 8); assert.equal(r.max, 8);
   assert.equal(r.crm.company, "Acme"); assert.equal(r.crm.budget, "Not discussed");
+  assert.equal(r.follow_up_email.subject, "Hi");
+  const noMail = validate({ ...good("BANT"), follow_up_email: undefined }, "BANT");
+  assert.deepEqual(noMail.follow_up_email, { subject: "", body: "" });
 });
 
 test("validate clamps bad scores and verdicts", () => {

@@ -4,63 +4,117 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Discovery Call Analyser</title>
-<meta name="description" content="Score a sales discovery call with MEDDICC, BANT or SPICED. See what wasn't asked, get next steps, and copy ready-made CRM notes. Works with transcripts, chats and audio recordings.">
+<meta name="description" content="Score a sales discovery call with MEDDICC, BANT or SPICED. See what wasn't asked, get the questions for your next call, a follow-up email and CRM notes. Works with transcripts, chats and audio recordings.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&family=Familjen+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='6' width='8' height='20' rx='2' fill='%2315233B'/%3E%3Crect x='12' y='6' width='8' height='20' rx='2' fill='none' stroke='%2315233B' stroke-width='2.5'/%3E%3Crect x='22' y='16' width='8' height='10' rx='2' fill='%2315233B'/%3E%3C/svg%3E">
 <style>
+@property --fill { syntax: "<percentage>"; inherits: true; initial-value: 0%; }
 :root{
   --ink:#15233B; --ink-2:#4A5871; --ink-3:#7A869B;
+  --night:#101B2E; --night-2:#1B2A45; --on-night:#FFFFFF; --on-night-2:#B9C5DA;
   --paper:#EDF1F6; --surface:#FFFFFF; --line:#CDD5E0; --line-2:#E3E8EF;
-  --cobalt:#2346D8; --cobalt-ink:#1A36AE; --cobalt-wash:#E6EBFC;
+  --cobalt:#2346D8; --cobalt-ink:#1A36AE; --cobalt-wash:#E6EBFC; --cobalt-bright:#8FA6FF;
+  --hl:#FFF1B8; --hl-edge:#E0B400;
   --advance:#1E7A55; --advance-wash:#E2F2EA;
   --nurture:#9A6512; --nurture-wash:#FBF0DC;
   --disq:#B4352B; --disq-wash:#FAE5E2;
   --display:"Familjen Grotesk", "Helvetica Neue", Arial, sans-serif;
   --body:"Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
-  --r-sm:6px; --r:10px;
+  --r-sm:6px; --r:10px; --r-lg:16px;
   color-scheme: light;
 }
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.55 var(--body);font-variant-numeric:tabular-nums}
-h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.15;margin:0;letter-spacing:-.01em}
+h1,h2,h3,h4{font-family:var(--display);font-weight:600;line-height:1.15;margin:0;letter-spacing:-.01em}
 p{margin:0}
 button,input,textarea,select{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--cobalt);outline-offset:2px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
-/* Header */
-header.top{padding:28px 0 22px}
-header.top .wrap{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap}
-.brand h1{font-size:30px;font-weight:700}
-.brand p{color:var(--ink-2);margin-top:6px;max-width:62ch}
-.top-links{display:flex;gap:18px;font-size:15px}
-.top-links a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--line)}
-.top-links a:hover{color:var(--ink);border-color:var(--ink)}
+/* ---------- Hero ---------- */
+.hero{background:var(--night);color:var(--on-night);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:auto 0 0 0;height:1px;background:var(--night-2)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 0}
+.logo{display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none;font-family:var(--display);font-weight:700;font-size:18px}
+.logo i{display:flex;gap:3px;align-items:flex-end;height:22px}
+.logo i b{width:7px;border-radius:2px;background:#fff;height:100%}
+.logo i b:nth-child(2){background:none;border:2px solid #fff}
+.logo i b:nth-child(3){height:50%}
+.nav-links{display:flex;gap:22px;font-size:15px}
+.nav-links a{color:var(--on-night-2);text-decoration:none}
+.nav-links a:hover{color:#fff}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:56px;align-items:center;padding:48px 0 72px}
+.hero h1{font-size:clamp(38px,5.4vw,64px);font-weight:700;line-height:1.02;letter-spacing:-.025em;max-width:13ch}
+.hero .lede{color:var(--on-night-2);font-size:19px;margin-top:20px;max-width:46ch}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.btn-hero{display:inline-flex;align-items:center;gap:8px;border-radius:var(--r-sm);padding:13px 20px;font-weight:700;font-size:16px;cursor:pointer;border:1.5px solid #fff;text-decoration:none}
+.btn-hero.solid{background:#fff;color:var(--night)}
+.btn-hero.solid:hover{background:var(--cobalt-wash)}
+.btn-hero.ghost{background:transparent;color:#fff;border-color:#5A6C8C}
+.btn-hero.ghost:hover{border-color:#fff}
+.works{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:34px;font-size:14.5px;color:var(--on-night-2)}
+.works span{display:inline-flex;align-items:center;gap:7px}
+.works svg{width:16px;height:16px;color:var(--cobalt-bright)}
 
-/* Main layout */
-main .layout{display:grid;grid-template-columns:400px minmax(0,1fr);gap:28px;align-items:start}
+.demo{background:var(--surface);color:var(--ink);border-radius:var(--r-lg);padding:24px;box-shadow:0 30px 60px -20px rgba(0,0,0,.55);position:relative}
+.demo-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.demo-head h3{font-size:19px}
+.demo-head p{font-size:14px;color:var(--ink-2)}
+.demo .score{font-family:var(--display);font-weight:700;font-size:30px;line-height:1;text-align:right}
+.demo .score small{font-size:16px;color:var(--ink-3)}
+.demo .strip{margin-top:18px}
+.demo .tile{font-size:clamp(20px,3vw,34px)}
+.demo-quote{margin-top:18px;padding:12px 14px;background:var(--paper);border-radius:var(--r-sm);font-size:14.5px}
+.demo-quote b{display:block;font-family:var(--display);font-size:13.5px;margin-bottom:2px;color:var(--ink-2)}
+.demo-quote q{font-style:italic}
+.demo-next{margin-top:10px;font-size:14.5px;display:flex;gap:8px;align-items:flex-start}
+.demo-next svg{color:var(--cobalt);margin-top:2px}
+.pill{display:inline-block;font-family:var(--display);font-weight:700;font-size:14px;padding:3px 10px;border-radius:999px;border:1.5px solid currentColor}
+.pill.Advance{color:var(--advance);background:var(--advance-wash)}
+.pill.Nurture{color:var(--nurture);background:var(--nurture-wash)}
+.pill.Disqualify{color:var(--disq);background:var(--disq-wash)}
+
+/* ---------- How it works ---------- */
+.how{padding:56px 0 8px}
+.how h2,.sec-title{font-size:30px;font-weight:700}
+.steps{list-style:none;margin:24px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;counter-reset:s}
+.steps li{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;position:relative}
+.steps .ic{width:42px;height:42px;border-radius:10px;background:var(--cobalt-wash);color:var(--cobalt);display:grid;place-items:center}
+.steps .ic svg{width:22px;height:22px}
+.steps h3{font-size:19px;margin-top:16px;display:flex;gap:8px}
+.steps h3::before{counter-increment:s;content:counter(s);color:var(--cobalt)}
+.steps p{color:var(--ink-2);margin-top:6px;font-size:15.5px}
+
+/* ---------- Analyse ---------- */
+.analyse{padding-top:48px}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.sec-head p{color:var(--ink-2);max-width:60ch;margin-top:6px}
+.layout{display:grid;grid-template-columns:400px minmax(0,1fr);gap:28px;align-items:start}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
 .input{padding:22px;position:sticky;top:16px}
 .field+.field{margin-top:22px}
 .field>.label{display:block;font-weight:700;font-size:15px;margin-bottom:8px}
 .hint{color:var(--ink-2);font-size:14px}
 
-/* Framework picker */
-.fw{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
-.fw button{border:0;background:var(--surface);padding:10px 4px;font-family:var(--display);font-weight:600;font-size:16px;letter-spacing:.04em;cursor:pointer}
-.fw button+button{border-left:1px solid var(--line)}
-.fw button[aria-pressed="true"]{background:var(--ink);color:#fff}
-.fw button:not([aria-pressed="true"]):hover{background:var(--paper)}
+.fw{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.fw button{border:1.5px solid var(--line);background:var(--surface);border-radius:var(--r-sm);padding:9px 6px 8px;cursor:pointer;text-align:center}
+.fw button b{display:block;font-family:var(--display);font-weight:700;font-size:16px;letter-spacing:.03em}
+.fw button span{display:block;font-size:12.5px;color:var(--ink-3);margin-top:1px}
+.fw button[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:#fff}
+.fw button[aria-pressed="true"] span{color:var(--on-night-2)}
+.fw button:not([aria-pressed="true"]):hover{border-color:var(--ink-3)}
 .fw-blurb{margin-top:8px}
 
-/* Input tabs */
-.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:12px}
-.tabs button{border:0;background:none;padding:8px 10px 9px;cursor:pointer;color:var(--ink-2);font-weight:600;border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:12px}
+.tabs button{display:inline-flex;align-items:center;gap:7px;border:0;background:none;padding:8px 10px 9px;cursor:pointer;color:var(--ink-2);font-weight:600;border-bottom:3px solid transparent;margin-bottom:-1px;font-size:15px}
+.tabs button svg{width:17px;height:17px}
 .tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--cobalt)}
+.tabs button[aria-selected="true"] svg{color:var(--cobalt)}
 textarea{width:100%;min-height:230px;resize:vertical;border:1px solid var(--line);border-radius:var(--r-sm);padding:12px;background:var(--surface);font-size:14.5px;line-height:1.5}
 textarea:focus{border-color:var(--cobalt)}
 .row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}
@@ -68,8 +122,9 @@ textarea:focus{border-color:var(--cobalt)}
 .kind button{border:0;background:none;border-radius:999px;padding:3px 12px;font-size:14px;cursor:pointer;color:var(--ink-2)}
 .kind button[aria-pressed="true"]{background:var(--cobalt-wash);color:var(--cobalt-ink);font-weight:600}
 
-.drop{border:1.5px dashed var(--line);border-radius:var(--r);padding:26px 16px;text-align:center;background:var(--paper);cursor:pointer}
+.drop{display:block;border:1.5px dashed var(--line);border-radius:var(--r);padding:26px 16px;text-align:center;background:var(--paper);cursor:pointer}
 .drop:hover,.drop.over{border-color:var(--cobalt);background:var(--cobalt-wash)}
+.drop svg{width:28px;height:28px;color:var(--cobalt);margin-bottom:6px}
 .drop strong{display:block;font-size:16px;margin-bottom:4px}
 .drop input{display:none}
 
@@ -88,13 +143,15 @@ textarea:focus{border-color:var(--cobalt)}
 .bar>i{display:block;height:100%;width:0;background:var(--cobalt);transition:width .2s}
 .progress p{font-size:14px;color:var(--ink-2);margin-top:6px}
 
-.consent{font-size:14px;color:var(--ink-2);margin-top:16px;padding-left:12px;border-left:3px solid var(--line)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--ink);background:var(--surface);border-radius:var(--r-sm);padding:9px 14px;font-weight:600;cursor:pointer;font-size:15px}
+.consent{display:flex;gap:10px;font-size:14px;color:var(--ink-2);margin-top:16px;padding:10px 12px;border-radius:var(--r-sm);background:var(--paper)}
+.consent svg{color:var(--ink-3);margin-top:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--ink);background:var(--surface);border-radius:var(--r-sm);padding:9px 14px;font-weight:600;cursor:pointer;font-size:15px;text-decoration:none;color:var(--ink)}
 .btn:hover{background:var(--paper)}
+.btn svg{width:16px;height:16px}
 .btn.primary{background:var(--cobalt);border-color:var(--cobalt);color:#fff;width:100%;padding:13px;font-size:16px;margin-top:14px}
 .btn.primary:hover{background:var(--cobalt-ink)}
 .btn:disabled{opacity:.55;cursor:not-allowed}
-.btn.small{padding:6px 10px;font-size:14px;font-weight:600}
+.btn.small{padding:6px 10px;font-size:14px}
 .btn.quiet{border-color:var(--line)}
 .spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -107,11 +164,10 @@ textarea:focus{border-color:var(--cobalt)}
 .practice li button[aria-current="true"]{background:var(--cobalt-wash);color:var(--cobalt-ink);font-weight:600}
 .practice li small{color:var(--ink-3);font-size:13px;white-space:nowrap}
 
-/* Results */
-.results{min-height:520px}
+/* ---------- Results ---------- */
+.results{min-height:520px;overflow:hidden}
 .notice{padding:12px 16px;border-radius:var(--r-sm);background:var(--nurture-wash);color:#5E3E09;margin-bottom:16px;font-size:15px}
 .notice.err{background:var(--disq-wash);color:#7D211A}
-
 .empty{padding:40px 36px}
 .empty h2{font-size:24px;margin-top:28px;max-width:28ch}
 .empty p{color:var(--ink-2);margin-top:10px;max-width:56ch}
@@ -119,16 +175,17 @@ textarea:focus{border-color:var(--cobalt)}
 .empty li+li{margin-top:6px}
 
 /* The letter strip: one tile per framework element, filled by its score */
-.strip{display:flex;gap:8px;flex-wrap:nowrap}
+.strip{display:flex;gap:8px}
 .tile{--fill:0%;--letter:var(--ink);flex:1 1 0;min-width:0;aspect-ratio:3/4;max-width:92px;border:2.5px solid var(--ink);border-radius:8px;
   font-family:var(--display);font-weight:700;font-size:clamp(22px,4.4vw,52px);line-height:1;position:relative;overflow:hidden;text-decoration:none;
-  background:linear-gradient(to top,var(--ink) var(--fill),var(--surface) var(--fill))}
-/* The letter is painted with the same split as the tile, so it reads white on the filled part and ink on the empty part */
+  background:linear-gradient(to top,var(--ink) var(--fill),var(--surface) var(--fill));
+  transition:--fill .6s cubic-bezier(.2,.7,.2,1) calc(var(--i,0) * 70ms)}
 .tile>span:first-child{position:absolute;inset:0;display:grid;place-items:center;color:transparent;
   background:linear-gradient(to top,#fff var(--fill),var(--letter) var(--fill));-webkit-background-clip:text;background-clip:text}
 .tile.s0{border-color:var(--line);--letter:var(--ink-3)}
 .tile.s1{--fill:50%}
 .tile.s2{--fill:100%}
+.strip.pre .tile{--fill:0%}
 .tile.ghost{border-style:dashed;border-color:var(--line);--letter:var(--line)}
 a.tile:hover{border-color:var(--cobalt)}
 .legend{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:12px;font-size:13.5px;color:var(--ink-2)}
@@ -138,44 +195,70 @@ a.tile:hover{border-color:var(--cobalt)}
 .legend i.l1{background:linear-gradient(to top,var(--ink) 50%,transparent 50%)}
 .legend i.l0{border-color:var(--line)}
 
-.report{padding:28px 32px 34px}
+.report-head{padding:26px 32px 24px;border-bottom:1px solid var(--line-2)}
+.report-head.Advance{background:linear-gradient(180deg,var(--advance-wash),var(--surface) 70%)}
+.report-head.Nurture{background:linear-gradient(180deg,var(--nurture-wash),var(--surface) 70%)}
+.report-head.Disqualify{background:linear-gradient(180deg,var(--disq-wash),var(--surface) 70%)}
 .verdict-row{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;flex-wrap:wrap}
 .who{color:var(--ink-2);font-size:15px}
-.verdict{display:inline-block;font-family:var(--display);font-weight:700;font-size:40px;line-height:1;padding:8px 16px 10px;border-radius:8px;margin-top:8px;border:2.5px solid currentColor}
-.verdict.Advance{color:var(--advance);background:var(--advance-wash)}
-.verdict.Nurture{color:var(--nurture);background:var(--nurture-wash)}
-.verdict.Disqualify{color:var(--disq);background:var(--disq-wash)}
+.verdict{display:inline-block;font-family:var(--display);font-weight:700;font-size:40px;line-height:1;padding:8px 16px 10px;border-radius:8px;margin-top:8px;border:2.5px solid currentColor;background:var(--surface)}
+.verdict.Advance{color:var(--advance)}
+.verdict.Nurture{color:var(--nurture)}
+.verdict.Disqualify{color:var(--disq)}
 .total{text-align:right}
 .total b{font-family:var(--display);font-size:44px;font-weight:700;line-height:1}
 .total b small{font-size:22px;color:var(--ink-3);font-weight:600}
 .total p{font-size:14.5px;color:var(--ink-2);margin-top:4px}
 .reason{margin-top:16px;font-size:17px;max-width:70ch}
 .summary{margin-top:10px;color:var(--ink-2);max-width:70ch}
-.report .strip{margin-top:26px}
-.split-note{font-size:14px;color:var(--ink-2);margin-top:14px;max-width:70ch}
+.report-head .strip{margin-top:24px}
+.report-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
 
-section.block{margin-top:34px}
+.rtabs{display:flex;gap:2px;padding:0 24px;border-bottom:1px solid var(--line);overflow-x:auto;position:sticky;top:0;background:var(--surface);z-index:2}
+.rtabs button{display:inline-flex;align-items:center;gap:7px;border:0;background:none;padding:13px 10px 12px;cursor:pointer;color:var(--ink-2);font-weight:600;border-bottom:3px solid transparent;margin-bottom:-1px;white-space:nowrap;font-size:15px}
+.rtabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--cobalt)}
+.rtabs button[aria-selected="true"] svg{color:var(--cobalt)}
+.rpanel{padding:8px 32px 34px}
+.rpanel>h3.print-only{display:none}
+
+section.block{margin-top:28px}
 section.block>h3{font-size:20px;margin-bottom:12px}
 .elements{list-style:none;margin:0;padding:0;border-top:1px solid var(--line-2)}
-.el{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:4px 16px;padding:16px 0;border-bottom:1px solid var(--line-2);scroll-margin-top:16px}
-.el .tile{width:44px;max-width:none;font-size:22px;border-width:2px;border-radius:6px}
-.el h4{margin:0;font-family:var(--display);font-size:17px;font-weight:600}
+.el{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:4px 16px;padding:16px 0;border-bottom:1px solid var(--line-2);scroll-margin-top:60px}
+.el .tile{width:44px;max-width:none;font-size:22px;border-width:2px;border-radius:6px;transition:none}
+.el h4{font-size:17px}
 .el .ask{font-size:14px;color:var(--ink-3)}
-.el .pts{font-family:var(--display);font-weight:600;font-size:15px;white-space:nowrap;color:var(--ink-2)}
+.chip{font-family:var(--display);font-weight:600;font-size:14px;white-space:nowrap;padding:3px 10px;border-radius:999px;height:max-content}
+.chip.c2{background:var(--advance-wash);color:var(--advance)}
+.chip.c1{background:var(--nurture-wash);color:var(--nurture)}
+.chip.c0{background:var(--disq-wash);color:var(--disq)}
 .el .body{grid-column:2/4}
 .el blockquote{margin:10px 0 0;padding:2px 0 2px 12px;border-left:3px solid var(--ink);font-style:italic}
 .el .none{margin-top:10px;font-size:14.5px;color:var(--disq)}
 .el .gap{margin-top:8px;color:var(--ink-2);font-size:15px}
 .el:target{background:var(--cobalt-wash)}
-
-.cols{display:grid;grid-template-columns:1fr 1fr;gap:28px}
-.cols section.block{margin-top:34px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:0 28px}
 ol.q,ul.l{margin:0;padding-left:20px}
 ol.q li,ul.l li{margin-bottom:8px}
 ol.q li{padding-left:4px}
 ol.q li::marker{font-family:var(--display);font-weight:600;color:var(--cobalt)}
 
-.crm{border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+/* Transcript */
+.ts-note{color:var(--ink-2);font-size:14.5px;margin:20px 0 14px;max-width:70ch}
+.ts{white-space:pre-wrap;font-size:15.5px;line-height:1.75;max-width:78ch}
+.ts b{font-weight:700}
+mark.hl{background:var(--hl);box-shadow:inset 0 -2px 0 var(--hl-edge);color:inherit;padding:1px 2px;border-radius:2px}
+.hl-tag{display:inline-block;font-family:var(--display);font-weight:600;font-size:12px;line-height:1;background:var(--ink);color:#fff;border-radius:4px;padding:3px 6px 4px;margin-right:5px;vertical-align:2px;font-style:normal;white-space:nowrap}
+
+/* Email */
+.mail{border:1px solid var(--line);border-radius:var(--r);margin-top:22px;overflow:hidden;max-width:72ch}
+.mail-sub{padding:12px 16px;border-bottom:1px solid var(--line-2);background:var(--paper)}
+.mail-sub span{color:var(--ink-2);font-size:14px}
+.mail-sub b{display:block;font-family:var(--display);font-size:17px}
+.mail-body{padding:16px;white-space:pre-wrap;font-size:15.5px}
+.mail-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+
+.crm{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:22px}
 .crm-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;background:var(--paper);border-bottom:1px solid var(--line)}
 .crm-head h3{font-size:18px}
 .crm dl{margin:0;display:grid;grid-template-columns:170px minmax(0,1fr)}
@@ -184,11 +267,44 @@ ol.q li::marker{font-family:var(--display);font-weight:600;color:var(--cobalt)}
 .crm dd.nd{color:var(--ink-3)}
 .crm dl>*:nth-last-child(-n+2){border-bottom:0}
 
-/* History */
-.history{margin:36px 0 0;padding:24px;min-width:0}
-.history-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
-.history-head h2{font-size:22px}
-.history-head div{display:flex;gap:8px}
+/* ---------- Progress dashboard ---------- */
+.progress-sec{padding-top:56px}
+.dash{padding:24px}
+.dash-filters{display:flex;gap:10px 18px;align-items:center;flex-wrap:wrap;margin-bottom:20px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.seg button{border:0;background:var(--surface);padding:7px 14px;font-weight:600;cursor:pointer;font-family:var(--display);letter-spacing:.03em}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.check{display:inline-flex;gap:8px;align-items:center;font-size:15px;cursor:pointer}
+.check input{width:17px;height:17px;accent-color:var(--cobalt)}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.stat{border:1px solid var(--line-2);border-radius:var(--r);padding:16px 18px}
+.stat h3{font-size:15px;color:var(--ink-2);font-family:var(--body);font-weight:600;letter-spacing:0}
+.stat .big{font-family:var(--display);font-weight:700;font-size:40px;line-height:1.1;margin-top:6px}
+.stat .big small{font-size:18px;color:var(--ink-3)}
+.stat p{font-size:14px;color:var(--ink-2)}
+.vsplit{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap}
+.vsplit span{display:flex;flex-direction:column;font-size:13.5px;color:var(--ink-2)}
+.vsplit b{font-family:var(--display);font-size:26px;line-height:1.1}
+.vsplit .Advance b{color:var(--advance)} .vsplit .Nurture b{color:var(--nurture)} .vsplit .Disqualify b{color:var(--disq)}
+.charts{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;margin-top:14px}
+.chart{border:1px solid var(--line-2);border-radius:var(--r);padding:16px 18px}
+.chart h3{font-size:17px}
+.chart>p{font-size:14px;color:var(--ink-2);margin-top:2px}
+.chart svg{display:block;width:100%;height:auto;margin-top:10px;overflow:visible}
+.chart .axis{font-size:12px;fill:var(--ink-3);font-family:var(--body);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+.chart .lab{font-size:13px;fill:var(--ink);font-family:var(--body)}
+.chart .val{font-size:12.5px;fill:var(--ink-2);font-family:var(--body)}
+.chart .grid{stroke:var(--line-2);stroke-width:1}
+.chart .band{stroke:var(--line);stroke-width:1;stroke-dasharray:4 4}
+.chart .empty-chart{padding:30px 0;color:var(--ink-2);font-size:15px}
+.tip{position:fixed;pointer-events:none;background:var(--ink);color:#fff;font-size:13.5px;padding:7px 10px;border-radius:6px;z-index:20;opacity:0;transition:opacity .1s;max-width:260px}
+.tip.show{opacity:1}
+
+/* ---------- History ---------- */
+.history-sec{padding-top:56px}
+.history{padding:24px}
+.history-head{display:flex;justify-content:flex-end;gap:8px;margin-bottom:14px;flex-wrap:wrap}
 table{width:100%;border-collapse:collapse;font-size:15px}
 th{text-align:left;font-weight:600;color:var(--ink-2);padding:8px 10px;border-bottom:1px solid var(--line)}
 td{padding:10px;border-bottom:1px solid var(--line-2);vertical-align:top}
@@ -197,60 +313,133 @@ td.v-Advance{color:var(--advance);font-weight:700}
 td.v-Nurture{color:var(--nurture);font-weight:700}
 td.v-Disqualify{color:var(--disq);font-weight:700}
 .table-wrap{overflow-x:auto}
-.history .empty-row{color:var(--ink-2);padding:6px 0}
+.empty-row{color:var(--ink-2);padding:6px 0}
 
-footer{padding:36px 0 48px;color:var(--ink-2);font-size:14.5px}
+footer{margin-top:64px;background:var(--night);color:var(--on-night-2);padding:36px 0 44px;font-size:14.5px}
 footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
-footer p{max-width:70ch}
-footer a{color:inherit}
+footer p{max-width:66ch}
+footer a{color:#fff}
 
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:var(--r-sm);opacity:0;pointer-events:none;transition:.2s;font-size:15px;z-index:10}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:var(--r-sm);opacity:0;pointer-events:none;transition:.2s;font-size:15px;z-index:30}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 @media (max-width:980px){
-  main .layout{grid-template-columns:1fr}
+  .hero-grid{grid-template-columns:1fr;gap:36px;padding:28px 0 52px}
+  .layout{grid-template-columns:1fr}
   .input{position:static}
+  .steps{grid-template-columns:1fr}
+  .charts{grid-template-columns:1fr}
 }
 @media (max-width:640px){
   .wrap{padding:0 16px}
-  .brand h1{font-size:25px}
+  .nav-links a:not(.keep){display:none}
+  .hero .lede{font-size:17px}
+  .demo{padding:18px}
   .input{padding:18px}
-  .report{padding:20px 16px 26px}
+  .report-head{padding:20px 16px}
+  .rtabs{padding:0 8px}
+  .rpanel{padding:4px 16px 26px}
   .empty{padding:28px 18px}
   .strip{gap:5px}
   .tile{border-width:2px;border-radius:6px}
   .verdict{font-size:30px}
   .total{text-align:left}
   .total b{font-size:36px}
-  .cols{grid-template-columns:1fr;gap:0}
+  .cols{grid-template-columns:1fr}
   .crm dl{grid-template-columns:1fr}
   .crm dt{border-bottom:0;padding-bottom:0}
-  .history{padding:18px 16px}
+  .tiles{grid-template-columns:1fr}
+  .dash,.history{padding:18px 16px}
   th:nth-child(3),td:nth-child(3){display:none}
 }
 @media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
   *{transition:none!important;animation:none!important}
+}
+@media print{
+  body{background:#fff;font-size:12pt}
+  .hero,.how,.sec-head,.input,.progress-sec,.history-sec,footer,.rtabs,.report-actions,.notice,.mail-actions,.crm-head button,.toast,.tip{display:none!important}
+  .layout{display:block}
+  .panel{border:0}
+  .rpanel[hidden]{display:block!important}
+  .rpanel{padding:0 0 18px;break-inside:auto}
+  .rpanel>h3.print-only{display:block;font-size:18pt;margin:22px 0 4px}
+  .report-head{padding:0 0 16px;background:none!important}
+  .el{break-inside:avoid}
+  .tile,.legend i,mark.hl,.hl-tag,.chip{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .analyse{padding:0}
+  .wrap{max-width:none;padding:0}
 }
 </style>
 </head>
 <body>
-<header class="top">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-paste" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M8 12h8M8 16h5"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-score" viewBox="0 0 24 24"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="16" rx="1.5"/><path d="M17 12h4v8h-4z"/></symbol>
+  <symbol id="i-text" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></symbol>
+  <symbol id="i-crm" viewBox="0 0 24 24"><path d="M3 5h18M3 12h18M3 19h12"/></symbol>
+  <symbol id="i-print" viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+  <symbol id="i-q" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></symbol>
+</svg>
+
+<header class="hero">
   <div class="wrap">
-    <div class="brand">
-      <h1>Discovery Call Analyser</h1>
-      <p>Score how well a sales lead was qualified, see the questions that were missed, and get next steps and CRM notes in about a minute.</p>
-    </div>
-    <nav class="top-links" aria-label="Project links">
-      <a href="#history">History</a>
-      <a href="https://github.com/Juliet6364/discovery-call-analyser-v2" rel="noopener">Source code</a>
-      <a href="https://www.linkedin.com/in/juliet-arambam1" rel="noopener">Juliet Arambam</a>
+    <nav class="nav" aria-label="Main">
+      <a class="logo" href="#top" id="top"><i aria-hidden="true"><b></b><b></b><b></b></i>Discovery Call Analyser</a>
+      <div class="nav-links">
+        <a href="#how">How it works</a>
+        <a href="#analyse" class="keep">Analyse</a>
+        <a href="#progress">Progress</a>
+        <a href="#history">History</a>
+        <a href="https://github.com/Juliet6364/discovery-call-analyser-v2" rel="noopener">Source code</a>
+      </div>
     </nav>
+    <div class="hero-grid">
+      <div>
+        <h1>See what your discovery call missed</h1>
+        <p class="lede">Score any sales conversation against MEDDICC, BANT or SPICED, with a quote behind every score. Then get the questions for your next call, a follow-up email and CRM notes.</p>
+        <div class="cta">
+          <button type="button" class="btn-hero solid" id="try">Try a practice call</button>
+          <a class="btn-hero ghost" href="#analyse" id="own">Analyse your own call</a>
+        </div>
+        <div class="works">
+          <span><svg class="i"><use href="#i-text"/></svg>Call transcripts</span>
+          <span><svg class="i"><use href="#i-chat"/></svg>WhatsApp and email threads</span>
+          <span><svg class="i"><use href="#i-upload"/></svg>Audio files</span>
+          <span><svg class="i"><use href="#i-mic"/></svg>Live role-play recording</span>
+        </div>
+      </div>
+      <div class="demo" id="demo" aria-label="Example result"></div>
+    </div>
   </div>
 </header>
 
-<main>
+<section class="wrap how" id="how" aria-labelledby="h-how">
+  <h2 id="h-how">How it works</h2>
+  <ol class="steps">
+    <li><div class="ic"><svg class="i"><use href="#i-mic"/></svg></div><h3>Add the conversation</h3><p>Paste a transcript or chat, upload a file or recording, or record a role-play here. Audio is transcribed on your device.</p></li>
+    <li><div class="ic"><svg class="i"><use href="#i-score"/></svg></div><h3>Score the qualification</h3><p>Each element of your framework is checked and backed by a quote from the call, or flagged as not covered.</p></li>
+    <li><div class="ic"><svg class="i"><use href="#i-send"/></svg></div><h3>Act on it</h3><p>Get a deal verdict, the questions for your next call, a follow-up email, CRM notes and a PDF report.</p></li>
+  </ol>
+</section>
+
+<main class="analyse" id="analyse">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <h2 class="sec-title">Analyse a conversation</h2>
+        <p>Choose a framework, add the conversation, and get a scorecard in about a minute.</p>
+      </div>
+    </div>
+  </div>
   <div class="wrap layout">
-    <!-- Input -->
     <form class="panel input" id="form" novalidate>
       <div class="field">
         <span class="label" id="fw-label">Qualification framework</span>
@@ -261,9 +450,9 @@ footer a{color:inherit}
       <div class="field">
         <span class="label">Conversation</span>
         <div class="tabs" role="tablist" aria-label="How to add the conversation">
-          <button type="button" role="tab" id="tab-paste" aria-controls="pane-paste" aria-selected="true">Paste text</button>
-          <button type="button" role="tab" id="tab-file" aria-controls="pane-file" aria-selected="false" tabindex="-1">Upload a file</button>
-          <button type="button" role="tab" id="tab-rec" aria-controls="pane-rec" aria-selected="false" tabindex="-1">Record</button>
+          <button type="button" role="tab" id="tab-paste" aria-controls="pane-paste" aria-selected="true"><svg class="i"><use href="#i-paste"/></svg>Paste</button>
+          <button type="button" role="tab" id="tab-file" aria-controls="pane-file" aria-selected="false" tabindex="-1"><svg class="i"><use href="#i-upload"/></svg>Upload</button>
+          <button type="button" role="tab" id="tab-rec" aria-controls="pane-rec" aria-selected="false" tabindex="-1"><svg class="i"><use href="#i-mic"/></svg>Record</button>
         </div>
 
         <div role="tabpanel" id="pane-paste" aria-labelledby="tab-paste">
@@ -281,12 +470,11 @@ footer a{color:inherit}
         <div role="tabpanel" id="pane-file" aria-labelledby="tab-file" hidden>
           <label class="drop" id="drop">
             <input type="file" id="file" accept=".txt,text/plain,audio/*,.mp3,.m4a,.wav,.webm,.ogg,.aac,.flac,.mp4">
+            <svg class="i"><use href="#i-upload"/></svg>
             <strong>Choose a transcript or recording</strong>
             <span class="hint">A .txt transcript, or audio such as .mp3, .m4a or .wav. Drag it here or click to browse.</span>
           </label>
-          <div class="progress" id="file-progress" hidden>
-            <div class="bar"><i></i></div><p></p>
-          </div>
+          <div class="progress" id="file-progress" hidden><div class="bar"><i></i></div><p></p></div>
         </div>
 
         <div role="tabpanel" id="pane-rec" aria-labelledby="tab-rec" hidden>
@@ -303,15 +491,13 @@ footer a{color:inherit}
               <audio controls id="rec-audio"></audio>
               <button type="button" class="btn small" id="rec-go" style="margin-top:10px">Transcribe recording</button>
             </div>
-            <div class="progress" id="rec-progress" hidden>
-              <div class="bar"><i></i></div><p></p>
-            </div>
+            <div class="progress" id="rec-progress" hidden><div class="bar"><i></i></div><p></p></div>
           </div>
         </div>
-        <p class="hint" style="margin-top:10px" id="audio-note">Recordings are transcribed on your device. The audio is never uploaded.</p>
+        <p class="hint" style="margin-top:10px">Recordings are transcribed on your device. The audio is never uploaded.</p>
       </div>
 
-      <p class="consent">Use role-played calls, or calls where everyone has agreed to be recorded and reviewed. Don't paste real customer conversations without consent.</p>
+      <p class="consent"><svg class="i"><use href="#i-shield"/></svg><span>Use role-played calls, or calls where everyone has agreed to be recorded and reviewed. Don't paste real customer conversations without consent.</span></p>
       <button type="submit" class="btn primary" id="go">Analyse conversation</button>
 
       <div class="practice">
@@ -321,32 +507,44 @@ footer a{color:inherit}
       </div>
     </form>
 
-    <!-- Results -->
     <div class="panel results" id="results" aria-live="polite"></div>
   </div>
-
-  <section class="wrap" aria-labelledby="h-history">
-    <div class="panel history" id="history">
-      <div class="history-head">
-        <h2 id="h-history">History</h2>
-        <div>
-          <button type="button" class="btn small" id="csv">Download CSV</button>
-          <button type="button" class="btn small quiet" id="clear">Clear history</button>
-        </div>
-      </div>
-      <p class="hint" style="margin-bottom:12px">Saved in this browser only. Nothing is stored on a server.</p>
-      <div class="table-wrap" id="history-body"></div>
-    </div>
-  </section>
 </main>
+
+<section class="wrap progress-sec" id="progress" aria-labelledby="h-progress">
+  <div class="sec-head">
+    <div>
+      <h2 class="sec-title" id="h-progress">Your progress</h2>
+      <p>How your qualification is trending, and which parts of the framework get missed most. Built from the history in this browser.</p>
+    </div>
+  </div>
+  <div class="panel dash" id="dash"></div>
+</section>
+
+<section class="wrap history-sec" id="history" aria-labelledby="h-history">
+  <div class="sec-head">
+    <div>
+      <h2 class="sec-title" id="h-history">History</h2>
+      <p>Saved in this browser only. Nothing is stored on a server.</p>
+    </div>
+  </div>
+  <div class="panel history">
+    <div class="history-head">
+      <button type="button" class="btn small" id="csv">Download CSV</button>
+      <button type="button" class="btn small quiet" id="clear">Clear history</button>
+    </div>
+    <div class="table-wrap" id="history-body"></div>
+  </div>
+</section>
 
 <footer>
   <div class="wrap">
-    <p>The score shows how well the rep qualified the lead. The verdict shows whether the deal is worth pursuing. A well-run call can still end in Disqualify. Results are advice: a person makes the final call on the deal.</p>
-    <p>Built by Juliet Arambam with Claude.</p>
+    <p>The score shows how well the rep qualified the lead. The verdict shows whether the deal is worth pursuing, so a well-run call can still end in Disqualify. Results are advice: a person makes the final call on the deal.</p>
+    <p>Built by <a href="https://www.linkedin.com/in/juliet-arambam1" rel="noopener">Juliet Arambam</a> with Claude.</p>
   </div>
 </footer>
 <div class="toast" id="toast" role="status"></div>
+<div class="tip" id="tip" aria-hidden="true"></div>
 
 <script src="frameworks.js"></script>
 <script src="samples.js"></script>
@@ -356,6 +554,7 @@ const { FRAMEWORKS, CRM_FIELDS, band } = window.DCA;
 const PRACTICE = window.PRACTICE || [];
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+const icon = (id) => `<svg class="i" aria-hidden="true"><use href="#i-${id}"/></svg>`;
 const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch { return false; } }
@@ -363,11 +562,8 @@ const store = {
 
 const state = {
   framework: store.get("dca2.framework", "MEDDICC"),
-  kind: "call",          // call | chat
-  fromAudio: false,      // transcript came from a recording
-  practice: null,        // practice conversation currently loaded
-  result: null,
-  busy: false
+  kind: "call", fromAudio: false, practice: null, result: null, busy: false,
+  rtab: "score", dashFw: null, dashPractice: true
 };
 if (!FRAMEWORKS[state.framework]) state.framework = "MEDDICC";
 
@@ -378,10 +574,54 @@ function toast(msg) {
   clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 2400);
 }
 
+/* Tooltip for charts */
+const tip = $("#tip");
+document.addEventListener("pointerover", (e) => {
+  const t = e.target.closest("[data-tip]"); if (!t) return;
+  tip.textContent = t.dataset.tip; tip.classList.add("show");
+});
+document.addEventListener("pointermove", (e) => {
+  if (!tip.classList.contains("show")) return;
+  const x = Math.min(e.clientX + 14, window.innerWidth - tip.offsetWidth - 8);
+  tip.style.left = x + "px"; tip.style.top = (e.clientY - tip.offsetHeight - 12) + "px";
+});
+document.addEventListener("pointerout", (e) => { if (e.target.closest("[data-tip]")) tip.classList.remove("show"); });
+
+/* ---------- Letter strip ---------- */
+function stripHTML(fw, scores, linked, animate) {
+  return `<div class="strip${animate ? " pre" : ""}">${FRAMEWORKS[fw].elements.map((el, i) => {
+    const s = scores ? scores[i].score : null;
+    const cls = s == null ? "ghost" : "s" + s;
+    const label = s == null ? el.name : `${el.name}: ${s} of 2`;
+    return linked
+      ? `<a class="tile ${cls}" style="--i:${i}" href="#el-${i}" title="${esc(label)}" aria-label="${esc(label)}"><span>${el.letter}</span></a>`
+      : `<div class="tile ${cls}" style="--i:${i}" title="${esc(label)}"><span aria-hidden="true">${el.letter}</span><span class="sr">${esc(label)}</span></div>`;
+  }).join("")}</div>`;
+}
+function playStrips(root) {
+  requestAnimationFrame(() => requestAnimationFrame(() => root.querySelectorAll(".strip.pre").forEach(s => s.classList.remove("pre"))));
+}
+const legend = `<div class="legend" aria-hidden="true"><span><i class="l2"></i>Clearly established</span><span><i class="l1"></i>Partly covered</span><span><i class="l0"></i>Not covered</span></div>`;
+
+/* ---------- Hero demo card ---------- */
+function renderDemo() {
+  const p = PRACTICE.find(x => x.id === "cio"); if (!p) return;
+  const r = practiceResult(p, "MEDDICC");
+  $("#demo").innerHTML = `
+    <div class="demo-head">
+      <div><h3>${esc(r.crm.company)}</h3><p>CIO discovery call, scored with MEDDICC</p><p style="margin-top:8px"><span class="pill ${r.verdict}">${r.verdict}</span></p></div>
+      <div class="score">${r.total}<small> / ${r.max}</small><p class="hint" style="font-family:var(--body);font-weight:400;margin-top:4px">${band(r.total, r.max).label}</p></div>
+    </div>
+    ${stripHTML("MEDDICC", r.scores, false, true)}
+    <div class="demo-quote"><b>Metrics, 2 of 2</b><q>${esc(r.scores[0].evidence)}</q></div>
+    <div class="demo-next">${icon("q")}<span><b>Ask next:</b> ${esc(r.missed_questions[0])}</span></div>`;
+  playStrips($("#demo"));
+}
+
 /* ---------- Framework picker ---------- */
 function renderFramework() {
   $("#fw").innerHTML = Object.keys(FRAMEWORKS).map(k =>
-    `<button type="button" data-fw="${k}" aria-pressed="${k === state.framework}">${k}</button>`).join("");
+    `<button type="button" data-fw="${k}" aria-pressed="${k === state.framework}"><b>${k}</b><span>${FRAMEWORKS[k].elements.length} elements</span></button>`).join("");
   $("#fw-blurb").textContent = FRAMEWORKS[state.framework].blurb;
 }
 $("#fw").addEventListener("click", (e) => {
@@ -393,8 +633,8 @@ $("#fw").addEventListener("click", (e) => {
   else if (!state.result) renderEmpty();
 });
 
-/* ---------- Tabs ---------- */
-const tabs = [...document.querySelectorAll('[role="tab"]')];
+/* ---------- Input tabs ---------- */
+const tabs = [...document.querySelectorAll('#form [role="tab"]')];
 function selectTab(tab) {
   tabs.forEach(t => {
     const on = t === tab;
@@ -432,23 +672,28 @@ function loadText(value, { kind = "call", fromAudio = false } = {}) {
 
 /* ---------- Practice conversations ---------- */
 function renderPractice() {
-  $("#practice").innerHTML = PRACTICE.map(p => {
-    const c = p.saved.crm;
-    return `<li><button type="button" data-id="${p.id}" aria-current="${state.practice?.id === p.id}">
-      <span>${esc(p.label)}</span><small>${esc(c.company)}</small></button></li>`;
-  }).join("");
+  $("#practice").innerHTML = PRACTICE.map(p => `<li><button type="button" data-id="${p.id}" aria-current="${state.practice?.id === p.id}">
+      <span>${esc(p.label)}</span><small>${esc(p.saved.crm.company)}</small></button></li>`).join("");
+}
+function loadPractice(p) {
+  state.practice = p; loadText(p.text, { kind: p.source === "chat" ? "chat" : "call" });
+  renderPractice(); showPractice(p, true);
 }
 $("#practice").addEventListener("click", (e) => {
   const b = e.target.closest("button[data-id]"); if (!b || state.busy) return;
-  const p = PRACTICE.find(x => x.id === b.dataset.id);
-  state.practice = p; loadText(p.text, { kind: p.source === "chat" ? "chat" : "call" });
-  renderPractice(); showPractice(p, true);
+  loadPractice(PRACTICE.find(x => x.id === b.dataset.id));
 });
+$("#try").addEventListener("click", () => {
+  if (state.busy) return;
+  loadPractice(PRACTICE[0]);
+  $("#results").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+$("#own").addEventListener("click", () => setTimeout(() => text.focus({ preventScroll: true }), 400));
 function practiceResult(p, fw) {
   const f = p.saved.frameworks[fw];
   const total = f.scores.reduce((t, s) => t + s.score, 0);
   return { ...p.saved, framework: fw, scores: f.scores, missed_questions: f.missed_questions,
-    total, max: FRAMEWORKS[fw].elements.length * 2, source: p.source, practice: true };
+    total, max: FRAMEWORKS[fw].elements.length * 2, source: p.source, practice: true, transcript: p.text };
 }
 function showPractice(p, scroll) {
   const r = practiceResult(p, state.framework);
@@ -458,18 +703,6 @@ function showPractice(p, scroll) {
 }
 
 /* ---------- Results ---------- */
-function stripHTML(fw, scores, linked) {
-  return `<div class="strip">${FRAMEWORKS[fw].elements.map((el, i) => {
-    const s = scores ? scores[i].score : null;
-    const cls = s == null ? "ghost" : "s" + s;
-    const label = s == null ? el.name : `${el.name}: ${s} of 2`;
-    return linked
-      ? `<a class="tile ${cls}" href="#el-${i}" title="${esc(label)}" aria-label="${esc(label)}"><span>${el.letter}</span></a>`
-      : `<div class="tile ${cls}" title="${esc(label)}"><span aria-hidden="true">${el.letter}</span><span class="sr">${esc(label)}</span></div>`;
-  }).join("")}</div>`;
-}
-const legend = `<div class="legend" aria-hidden="true"><span><i class="l2"></i>Clearly established</span><span><i class="l1"></i>Partly covered</span><span><i class="l0"></i>Not covered</span></div>`;
-
 function renderEmpty(note) {
   const fw = FRAMEWORKS[state.framework];
   $("#results").innerHTML = `<div class="empty">
@@ -480,9 +713,52 @@ function renderEmpty(note) {
     <ol>
       <li>Pick a practice conversation to see a saved result straight away.</li>
       <li>Or add your own role-play: paste the transcript, upload a file, or record it here.</li>
-      <li>Copy the CRM notes, or download all your results as a CSV.</li>
+      <li>Read the scorecard, then copy the follow-up email and CRM notes or save a PDF.</li>
     </ol>
   </div>`;
+}
+
+// Find each evidence quote in the transcript, ignoring spacing, case and curly quotes.
+function highlight(textIn, r) {
+  const fw = FRAMEWORKS[r.framework];
+  const tx = String(textIn || "");
+  let norm = "", map = [], prevSpace = false;
+  const fold = (c) => c.replace(/[’‘]/g, "'").replace(/[“”]/g, '"').toLowerCase();
+  for (let i = 0; i < tx.length; i++) {
+    const c = tx[i];
+    if (/\s/.test(c)) { if (!prevSpace) { norm += " "; map.push(i); } prevSpace = true; }
+    else { norm += fold(c); map.push(i); prevSpace = false; }
+  }
+  const ranges = []; let found = 0, wanted = 0;
+  r.scores.forEach((s, i) => {
+    if (!s.evidence) return;
+    wanted++; let any = false;
+    for (let part of s.evidence.split(/\s*(?:\.\.\.|…)\s*/)) {
+      part = fold(part.replace(/\s+/g, " ").trim()).replace(/^["']|["']$/g, "");
+      let idx = norm.indexOf(part);
+      if (idx < 0) { part = part.replace(/[.,;:!?]+$/, ""); idx = part.length > 6 ? norm.indexOf(part) : -1; }
+      if (idx < 0 || part.length < 4) continue;
+      ranges.push({ start: map[idx], end: map[idx + part.length - 1] + 1, names: [fw.elements[i].name] });
+      any = true;
+    }
+    if (any) found++;
+  });
+  ranges.sort((a, b) => a.start - b.start);
+  const merged = [];
+  for (const g of ranges) {
+    const last = merged[merged.length - 1];
+    if (last && g.start < last.end) { last.end = Math.max(last.end, g.end); g.names.forEach(n => !last.names.includes(n) && last.names.push(n)); }
+    else merged.push({ ...g });
+  }
+  let html = "", pos = 0;
+  for (const g of merged) {
+    html += esc(tx.slice(pos, g.start));
+    html += `<mark class="hl"><span class="hl-tag">${esc(g.names.join(", "))}</span>${esc(tx.slice(g.start, g.end))}</mark>`;
+    pos = g.end;
+  }
+  html += esc(tx.slice(pos));
+  html = html.split("\n").map(line => line.replace(/^((?:\[[^\]]{1,20}\]\s*)?[^:<\n]{1,60}?):/, "<b>$1</b>:")).join("\n");
+  return { html, found, wanted };
 }
 
 function renderResult(r, meta = {}) {
@@ -496,54 +772,105 @@ function renderResult(r, meta = {}) {
     return `<li class="el" id="el-${i}">
       <div class="tile s${s.score}" aria-hidden="true"><span>${el.letter}</span></div>
       <div><h4>${esc(el.name)}</h4><div class="ask">${esc(el.ask)}</div></div>
-      <div class="pts">${s.score} of 2</div>
+      <div class="chip c${s.score}">${s.score} of 2</div>
       <div class="body">
         ${s.evidence ? `<blockquote>“${esc(s.evidence)}”</blockquote>` : `<p class="none">Not covered in the conversation.</p>`}
         ${s.gap ? `<p class="gap">${esc(s.gap)}</p>` : ""}
       </div>
     </li>`;
   }).join("");
-  const li = (a, cls) => a && a.length ? `<${cls === "q" ? "ol" : "ul"} class="${cls}">${a.map(x => `<li>${esc(x)}</li>`).join("")}</${cls === "q" ? "ol" : "ul"}>` : `<p class="hint">None.</p>`;
+  const li = (a, ordered) => a && a.length ? `<${ordered ? "ol class=\"q\"" : "ul class=\"l\""}>${a.map(x => `<li>${esc(x)}</li>`).join("")}</${ordered ? "ol" : "ul"}>` : `<p class="hint">None.</p>`;
   const crm = CRM_FIELDS.map(([k, label]) => {
     const v = c[k] || "Not discussed";
     return `<dt>${label}</dt><dd class="${v === "Not discussed" ? "nd" : ""}">${esc(v)}</dd>`;
   }).join("");
+  const ts = r.transcript ? highlight(r.transcript, r) : null;
+  const mail = r.follow_up_email && r.follow_up_email.body ? r.follow_up_email : null;
+  const tabsDef = [["score", "Scorecard", "score"], ["ts", "Transcript", "text"], ["mail", "Follow-up email", "mail"], ["crm", "CRM notes", "crm"]];
+  if (!tabsDef.some(t => t[0] === state.rtab)) state.rtab = "score";
 
   $("#results").innerHTML = `<article class="report">
-    ${r.practice ? `<div class="notice">Saved result for a practice conversation. Edit the text or add your own to run a live analysis.</div>` : ""}
-    <div class="verdict-row">
-      <div>
-        <p class="who">${esc(who || meta.label || "Conversation")}. ${srcLabel}, scored with ${fw.name}.</p>
-        <div class="verdict ${r.verdict}">${r.verdict}</div>
+    <div class="report-head ${r.verdict}">
+      ${r.practice ? `<div class="notice">Saved result for a practice conversation. Edit the text or add your own to run a live analysis.</div>` : ""}
+      <div class="verdict-row">
+        <div>
+          <p class="who">${esc(who || meta.label || "Conversation")}. ${srcLabel}, scored with ${fw.name}.</p>
+          <div class="verdict ${r.verdict}">${r.verdict}</div>
+        </div>
+        <div class="total"><b>${r.total}<small> / ${r.max}</small></b><p>${b.label}</p></div>
       </div>
-      <div class="total">
-        <b>${r.total}<small> / ${r.max}</small></b>
-        <p>${b.label}</p>
+      <p class="reason">${esc(r.verdict_reason)}</p>
+      <p class="summary">${esc(r.summary)}</p>
+      ${stripHTML(r.framework, r.scores, true, true)}
+      ${legend}
+      <div class="report-actions">
+        <button type="button" class="btn small" id="pdf">${icon("print")}Print or save as PDF</button>
+        <button type="button" class="btn small quiet" id="copy-all">${icon("copy")}Copy CRM notes</button>
       </div>
     </div>
-    <p class="reason">${esc(r.verdict_reason)}</p>
-    <p class="summary">${esc(r.summary)}</p>
-    ${stripHTML(r.framework, r.scores, true)}
-    ${legend}
 
-    <section class="block" aria-labelledby="h-els">
-      <h3 id="h-els">How each element was covered</h3>
-      <ul class="elements">${els}</ul>
-    </section>
-
-    <div class="cols">
-      <section class="block"><h3>Questions to ask next</h3>${li(r.missed_questions, "q")}</section>
-      <section class="block"><h3>Next steps</h3>${li(r.next_steps, "l")}</section>
-      <section class="block"><h3>What went well</h3>${li(r.strengths, "l")}</section>
-      <section class="block"><h3>Coaching points</h3>${li(r.improve, "l")}</section>
+    <div class="rtabs" role="tablist" aria-label="Result sections">
+      ${tabsDef.map(([id, label, ic]) => `<button type="button" role="tab" id="rt-${id}" aria-controls="rp-${id}" aria-selected="${state.rtab === id}" tabindex="${state.rtab === id ? 0 : -1}">${icon(ic)}${label}</button>`).join("")}
     </div>
 
-    <section class="block crm">
-      <div class="crm-head"><h3>CRM notes</h3><button type="button" class="btn small" id="copy">Copy notes</button></div>
-      <dl>${crm}</dl>
-    </section>
+    <div class="rpanel" role="tabpanel" id="rp-score" aria-labelledby="rt-score" ${state.rtab === "score" ? "" : "hidden"}>
+      <h3 class="print-only">Scorecard</h3>
+      <section class="block"><h3>How each element was covered</h3><ul class="elements">${els}</ul></section>
+      <div class="cols">
+        <section class="block"><h3>Questions to ask next</h3>${li(r.missed_questions, true)}</section>
+        <section class="block"><h3>Next steps</h3>${li(r.next_steps)}</section>
+        <section class="block"><h3>What went well</h3>${li(r.strengths)}</section>
+        <section class="block"><h3>Coaching points</h3>${li(r.improve)}</section>
+      </div>
+    </div>
+
+    <div class="rpanel" role="tabpanel" id="rp-ts" aria-labelledby="rt-ts" ${state.rtab === "ts" ? "" : "hidden"}>
+      <h3 class="print-only">Transcript</h3>
+      ${ts ? `<p class="ts-note">Highlighted lines are the evidence behind each score, tagged with the element they support. ${ts.found < ts.wanted ? `${ts.wanted - ts.found} of ${ts.wanted} quotes couldn't be matched exactly, usually because of small wording differences.` : ""}</p><div class="ts">${ts.html}</div>`
+        : `<p class="ts-note">The transcript wasn't saved with this result.</p>`}
+    </div>
+
+    <div class="rpanel" role="tabpanel" id="rp-mail" aria-labelledby="rt-mail" ${state.rtab === "mail" ? "" : "hidden"}>
+      <h3 class="print-only">Follow-up email</h3>
+      ${mail ? `<div class="mail">
+          <div class="mail-sub"><span>Subject</span><b>${esc(mail.subject)}</b></div>
+          <div class="mail-body">${esc(mail.body)}</div>
+        </div>
+        <div class="mail-actions">
+          <button type="button" class="btn small" id="copy-mail">${icon("copy")}Copy email</button>
+          <a class="btn small quiet" href="mailto:?subject=${encodeURIComponent(mail.subject)}&body=${encodeURIComponent(mail.body)}">${icon("mail")}Open in email app</a>
+        </div>
+        <p class="ts-note">A draft written from the conversation. Check the facts and tone before sending.</p>`
+        : `<p class="ts-note">No follow-up email was generated for this result. Run the analysis again to get one.</p>`}
+    </div>
+
+    <div class="rpanel" role="tabpanel" id="rp-crm" aria-labelledby="rt-crm" ${state.rtab === "crm" ? "" : "hidden"}>
+      <h3 class="print-only">CRM notes</h3>
+      <section class="crm">
+        <div class="crm-head"><h3>CRM notes</h3><button type="button" class="btn small" id="copy">${icon("copy")}Copy notes</button></div>
+        <dl>${crm}</dl>
+      </section>
+    </div>
   </article>`;
-  $("#copy").addEventListener("click", () => copyNotes(r));
+
+  const rt = [...document.querySelectorAll(".rtabs [role=tab]")];
+  const pick = (t) => {
+    state.rtab = t.id.slice(3);
+    rt.forEach(x => { const on = x === t; x.setAttribute("aria-selected", on); x.tabIndex = on ? 0 : -1; $("#" + x.getAttribute("aria-controls")).hidden = !on; });
+  };
+  rt.forEach((t, i) => {
+    t.addEventListener("click", () => pick(t));
+    t.addEventListener("keydown", (e) => {
+      const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+      if (d) { const n = rt[(i + d + rt.length) % rt.length]; n.focus(); pick(n); }
+    });
+  });
+  $("#copy").addEventListener("click", () => copy(crmText(r), "CRM notes copied"));
+  $("#copy-all").addEventListener("click", () => copy(crmText(r), "CRM notes copied"));
+  $("#pdf").addEventListener("click", () => window.print());
+  if (mail) $("#copy-mail").addEventListener("click", () => copy(`Subject: ${mail.subject}\n\n${mail.body}`, "Email copied"));
+  playStrips($("#results"));
+  renderDash();
 }
 
 function crmText(r) {
@@ -555,9 +882,9 @@ function crmText(r) {
     `Questions for next call:`, ...r.missed_questions.map(q => `- ${q}`)
   ].join("\n");
 }
-async function copyNotes(r) {
-  try { await navigator.clipboard.writeText(crmText(r)); toast("CRM notes copied"); }
-  catch { toast("Couldn't copy. Select the notes and copy them manually."); }
+async function copy(str, done) {
+  try { await navigator.clipboard.writeText(str); toast(done); }
+  catch { toast("Couldn't copy. Select the text and copy it manually."); }
 }
 function scrollToResults() {
   const top = $("#results").getBoundingClientRect().top;
@@ -581,7 +908,7 @@ $("#form").addEventListener("submit", async (e) => {
 
   setBusy(true, "Analysing, about a minute…");
   const fw = state.framework;
-  $("#results").innerHTML = `<div class="empty">${stripHTML(fw, null)}<h2>Reading the conversation</h2><p>Checking each ${fw} element and pulling quotes as evidence. This usually takes under a minute.</p></div>`;
+  $("#results").innerHTML = `<div class="empty">${stripHTML(fw, null)}<h2>Reading the conversation</h2><p>Checking each ${fw} element, pulling quotes as evidence and drafting your follow-up email. This usually takes under a minute.</p></div>`;
   scrollToResults();
   try {
     const res = await fetch("/api/analyze", {
@@ -591,11 +918,13 @@ $("#form").addEventListener("submit", async (e) => {
     let data = {};
     try { data = await res.json(); } catch {}
     if (!res.ok) {
+      const nc = data.code === "not_configured";
       const msg = data.message || `The analysis failed (error ${res.status}). Try again.`;
-      $("#results").innerHTML = `<div class="empty"><div class="notice ${data.code === "not_configured" ? "" : "err"}">${esc(msg)}</div>${stripHTML(fw, null)}<h2>${data.code === "not_configured" ? "Try a practice conversation" : "No result this time"}</h2><p>${data.code === "not_configured" ? "Practice conversations show a saved analysis for every framework without needing live analysis." : "Your text is still in the box, so you can run it again."}</p></div>`;
+      $("#results").innerHTML = `<div class="empty"><div class="notice ${nc ? "" : "err"}">${esc(msg)}</div>${stripHTML(fw, null)}<h2>${nc ? "Try a practice conversation" : "No result this time"}</h2><p>${nc ? "Practice conversations show a saved analysis for every framework without needing live analysis." : "Your text is still in the box, so you can run it again."}</p></div>`;
       return;
     }
-    state.result = data;
+    data.transcript = value;
+    state.result = data; state.rtab = "score";
     renderResult(data, {});
     saveHistory(data, data.crm?.company && data.crm.company !== "Not discussed" ? data.crm.company : "Your conversation");
     toast("Analysis ready");
@@ -611,9 +940,18 @@ const HKEY = "dca2.history";
 function saveHistory(r, label) {
   const list = store.get(HKEY, []);
   const id = r.practice ? `practice:${label}:${r.framework}` : `live:${Date.now()}`;
-  const entry = { id, at: new Date().toISOString(), label, result: r };
-  const next = [entry, ...list.filter(x => x.id !== id)].slice(0, 60);
-  store.set(HKEY, next); renderHistory();
+  const keep = { ...r };
+  if (r.practice) delete keep.transcript; // practice text is already on the page
+  const entry = { id, at: new Date().toISOString(), label, practiceId: r.practice ? (PRACTICE.find(p => p.label === label) || {}).id : null, result: keep };
+  let next = [entry, ...list.filter(x => x.id !== id)].slice(0, 40);
+  // If the browser runs out of space, drop transcripts from older entries first.
+  for (let i = next.length - 1; !store.set(HKEY, next) && i > 0; i--) { if (next[i].result.transcript) next[i] = { ...next[i], result: { ...next[i].result, transcript: "" } }; else next = next.slice(0, i); }
+  renderHistory(); renderDash();
+}
+function entryResult(x) {
+  const r = { ...x.result };
+  if (r.practice && !r.transcript) { const p = PRACTICE.find(p => p.id === x.practiceId || p.label === x.label); if (p) r.transcript = p.text; }
+  return r;
 }
 function renderHistory() {
   const list = store.get(HKEY, []);
@@ -635,30 +973,112 @@ function renderHistory() {
 $("#history-body").addEventListener("click", (e) => {
   const b = e.target.closest("[data-open]"); if (!b) return;
   const x = store.get(HKEY, []).find(h => h.id === b.dataset.open); if (!x) return;
-  state.result = x.result; renderResult(x.result, { label: x.label });
+  const r = entryResult(x);
+  state.result = r; renderResult(r, { label: x.label });
   $("#results").scrollIntoView({ behavior: "smooth", block: "start" });
 });
 $("#clear").addEventListener("click", () => {
   if (!confirm("Clear all saved analyses from this browser?")) return;
-  store.set(HKEY, []); renderHistory(); toast("History cleared");
+  store.set(HKEY, []); renderHistory(); renderDash(); toast("History cleared");
 });
 $("#csv").addEventListener("click", () => {
   const list = store.get(HKEY, []);
   const head = ["Date", "Conversation", "Practice", "Source", "Framework", "Score", "Max", "Band", "Verdict", "Verdict reason", "Element scores",
-    ...CRM_FIELDS.map(([, l]) => l), "Questions to ask next", "Next steps"];
+    ...CRM_FIELDS.map(([, l]) => l), "Questions to ask next", "Next steps", "Follow-up email subject", "Follow-up email"];
   const q = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
   const rows = list.map(x => {
     const r = x.result, fw = FRAMEWORKS[r.framework];
     return [x.at.slice(0, 16).replace("T", " "), x.label, r.practice ? "Yes" : "No", r.source || "call", r.framework, r.total, r.max,
       band(r.total, r.max).label, r.verdict, r.verdict_reason,
       fw.elements.map((el, i) => `${el.name} ${r.scores[i].score}`).join("; "),
-      ...CRM_FIELDS.map(([k]) => r.crm?.[k] || ""), (r.missed_questions || []).join(" | "), (r.next_steps || []).join(" | ")].map(q).join(",");
+      ...CRM_FIELDS.map(([k]) => r.crm?.[k] || ""), (r.missed_questions || []).join(" | "), (r.next_steps || []).join(" | "),
+      r.follow_up_email?.subject || "", r.follow_up_email?.body || ""].map(q).join(",");
   });
   const blob = new Blob(["﻿" + [head.map(q).join(","), ...rows].join("\r\n")], { type: "text/csv;charset=utf-8" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob); a.download = `discovery-call-analyses-${new Date().toISOString().slice(0, 10)}.csv`;
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 });
+
+/* ---------- Progress dashboard ---------- */
+function renderDash() {
+  const all = store.get(HKEY, []);
+  const counts = {}; all.forEach(x => counts[x.result.framework] = (counts[x.result.framework] || 0) + 1);
+  if (!state.dashFw || !FRAMEWORKS[state.dashFw]) state.dashFw = state.framework;
+  const fwKey = state.dashFw, fw = FRAMEWORKS[fwKey];
+  const list = all.filter(x => x.result.framework === fwKey && (state.dashPractice || !x.result.practice))
+    .slice().sort((a, b) => a.at.localeCompare(b.at));
+
+  const filters = `<div class="dash-filters">
+      <div class="seg" role="group" aria-label="Framework">${Object.keys(FRAMEWORKS).map(k =>
+        `<button type="button" data-dfw="${k}" aria-pressed="${k === fwKey}">${k}${counts[k] ? ` (${counts[k]})` : ""}</button>`).join("")}</div>
+      <label class="check"><input type="checkbox" id="dash-practice" ${state.dashPractice ? "checked" : ""}>Include practice conversations</label>
+    </div>`;
+
+  if (!list.length) {
+    $("#dash").innerHTML = filters + `<p class="empty-row">No ${fwKey} analyses yet${state.dashPractice ? "" : " apart from practice conversations"}. Run a few and your trends will appear here.</p>`;
+    bindDash(); return;
+  }
+
+  const pct = (x) => x.result.total / x.result.max * 100;
+  const avg = list.reduce((t, x) => t + pct(x), 0) / list.length;
+  const avgBand = band(avg, 100);
+  const v = { Advance: 0, Nurture: 0, Disqualify: 0 }; list.forEach(x => v[x.result.verdict]++);
+  const tiles = `<div class="tiles">
+      <div class="stat"><h3>Conversations analysed</h3><div class="big">${list.length}</div><p>with ${fwKey}</p></div>
+      <div class="stat"><h3>Average score</h3><div class="big">${Math.round(avg)}<small>%</small></div><p>${avgBand.label}</p></div>
+      <div class="stat"><h3>Verdicts</h3><div class="vsplit">${Object.entries(v).map(([k, n]) => `<span class="${k}"><b>${n}</b>${k}</span>`).join("")}</div></div>
+    </div>`;
+
+  // Chart 1: score over time (one series, % of max)
+  const W = 560, H = 230, L = 40, R = 14, T = 12, B = 30;
+  const xs = (i) => list.length === 1 ? L + (W - L - R) / 2 : L + i * (W - L - R) / (list.length - 1);
+  const ys = (p) => T + (H - T - B) * (1 - p / 100);
+  let line;
+  if (list.length < 2) {
+    line = `<p class="empty-chart">Analyse at least two conversations with ${fwKey} to see a trend.</p>`;
+  } else {
+    const pts = list.map((x, i) => [xs(i), ys(pct(x))]);
+    const grid = [0, 25, 50, 75, 100].map(g => `<line class="grid" x1="${L}" x2="${W - R}" y1="${ys(g)}" y2="${ys(g)}"/><text class="axis" x="${L - 8}" y="${ys(g) + 4}" text-anchor="end">${g}%</text>`).join("");
+    const bands = `<line class="band" x1="${L}" x2="${W - R}" y1="${ys(75)}" y2="${ys(75)}"/><text class="axis" x="${W - R}" y="${ys(75) - 5}" text-anchor="end">Well qualified</text>
+      <line class="band" x1="${L}" x2="${W - R}" y1="${ys(40)}" y2="${ys(40)}"/><text class="axis" x="${W - R}" y="${ys(40) - 5}" text-anchor="end">Needs work</text>`;
+    const path = `<path d="M${pts.map(p => p.join(",")).join("L")}" fill="none" stroke="var(--cobalt)" stroke-width="2" stroke-linejoin="round"/>`;
+    const dots = list.map((x, i) => {
+      const r = x.result, d = new Date(x.at).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+      const t = `${x.label}: ${r.total}/${r.max} (${Math.round(pct(x))}%), ${r.verdict}, ${d}`;
+      return `<g data-tip="${esc(t)}"><circle cx="${pts[i][0]}" cy="${pts[i][1]}" r="14" fill="transparent"/><circle cx="${pts[i][0]}" cy="${pts[i][1]}" r="5" fill="var(--cobalt)" stroke="var(--surface)" stroke-width="2"/></g>`;
+    }).join("");
+    const lastP = pts[pts.length - 1];
+    const lastLab = `<text class="val" x="${lastP[0]}" y="${lastP[1] - 12}" text-anchor="end">Latest ${Math.round(pct(list[list.length - 1]))}%</text>`;
+    const xl = `<text class="axis" x="${L}" y="${H - 8}">Oldest</text><text class="axis" x="${W - R}" y="${H - 8}" text-anchor="end">Newest</text>`;
+    line = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Score over time for ${list.length} ${fwKey} analyses, from ${Math.round(pct(list[0]))}% to ${Math.round(pct(list[list.length - 1]))}%">${grid}${bands}${path}${dots}${lastLab}${xl}</svg>`;
+  }
+
+  // Chart 2: average score per element, lowest first
+  const per = fw.elements.map((el, i) => ({ el, avg: list.reduce((t, x) => t + x.result.scores[i].score, 0) / list.length }))
+    .sort((a, b) => a.avg - b.avg);
+  const rowH = 30, bw = 380, bx = 130, BH = per.length * rowH + 6;
+  const bars = per.map((p, i) => {
+    const y = i * rowH + 4, w = Math.max(4, p.avg / 2 * (bw - bx - 50));
+    const label = `${p.avg.toFixed(1)} of 2`;
+    return `<g data-tip="${esc(p.el.name)}: average ${label} across ${list.length} conversation${list.length === 1 ? "" : "s"}">
+      <rect x="0" y="${y - 2}" width="${bw}" height="${rowH - 2}" fill="transparent"/>
+      <text class="lab" x="${bx - 10}" y="${y + 15}" text-anchor="end">${esc(p.el.name)}</text>
+      <rect x="${bx}" y="${y + 3}" width="${w}" height="16" rx="4" fill="var(--cobalt)"/>
+      <text class="val" x="${bx + w + 6}" y="${y + 15}">${label}</text></g>`;
+  }).join("");
+  const barsSvg = `<svg viewBox="0 0 ${bw} ${BH}" role="img" aria-label="Average score by element. Lowest: ${esc(per[0].el.name)} at ${per[0].avg.toFixed(1)} of 2.">${bars}</svg>`;
+
+  $("#dash").innerHTML = filters + tiles + `<div class="charts">
+      <div class="chart"><h3>Score over time</h3><p>Each dot is one analysis, as a share of the maximum score.</p>${line}</div>
+      <div class="chart"><h3>Most often missed</h3><p>Average score per element, lowest first. ${esc(per[0].el.name)} needs the most attention.</p>${barsSvg}</div>
+    </div>`;
+  bindDash();
+}
+function bindDash() {
+  $("#dash").querySelectorAll("[data-dfw]").forEach(b => b.addEventListener("click", () => { state.dashFw = b.dataset.dfw; renderDash(); }));
+  $("#dash-practice").addEventListener("change", (e) => { state.dashPractice = e.target.checked; renderDash(); });
+}
 
 /* ---------- Audio: decode, then transcribe on the device ---------- */
 let worker = null;
@@ -678,8 +1098,8 @@ async function decode(blob) {
     return mono;
   } finally { ctx.close(); }
 }
-function fmtMB(b) { return (b / 1048576).toFixed(0) + " MB"; }
-function fmtTime(s) { return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(Math.floor(s % 60)).padStart(2, "0")}`; }
+const fmtMB = (b) => (b / 1048576).toFixed(0) + " MB";
+const fmtTime = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
 
 async function transcribe(blob, ui) {
   if (state.busy) return;
@@ -787,7 +1207,7 @@ $("#rec-go").addEventListener("click", () => recBlob && transcribe(recBlob, "#re
 
 /* ---------- Start ---------- */
 renderFramework(); renderPractice(); renderHistory(); updateCount();
-renderEmpty();
+renderDemo(); renderEmpty(); renderDash();
 })();
 </script>
 </body>

@@ -26,6 +26,10 @@ window.PRACTICE = [
     "Could have asked Sanjay about his own stake in the project.",
     "Didn't ask what the competing proposals looked like."
    ],
+   "follow_up_email": {
+    "subject": "Scoping workshop on 4 November: agenda and security pack",
+    "body": "Hi Sanjay,\n\nThank you for the time today. To recap: your team keys around 40,000 emailed POs a month into SAP S/4HANA, and the goal is 80% touchless orders and a DSO of 55 days by year end.\n\nFor the scoping workshop on 4 November at 11 am with Deepa and your InfoSec lead, I suggest we cover:\n- success criteria for the 6-week proof of value\n- the on-premise bot setup and SAP connector\n- InfoSec and DPA requirements, so legal can start early\n\nI'll send our security pack and a draft DPA this week. Would it also be possible to get 20 minutes with Ramesh before the steering committee in December?\n\nBest regards,\nJuliet\nNexora Automation"
+   },
    "crm": {
     "company": "Vardhan Auto Components",
     "contact": "Sanjay",
@@ -203,6 +207,10 @@ window.PRACTICE = [
     "Gave a wide price range without anchoring it to the cost of the problem.",
     "Accepted 'send me a proposal' instead of booking the next meeting."
    ],
+   "follow_up_email": {
+    "subject": "E-way bill automation: a quick call with Farhan before the proposal",
+    "body": "Hi Meera,\n\nThanks for the time today. You mentioned about 9,000 e-way bills and invoices a month, around 18 lakh a quarter in detention charges and penalties, and a plan to avoid hiring 12 more people next year.\n\nBefore I send the proposal, could we do a 30-minute call with you and Farhan? I'd like to understand what he needs to see on ERP integration and security, so the proposal answers it the first time. It would also help to know what budget range you had in mind, so I can shape a first phase around it.\n\nWould Thursday or Friday work for you both?\n\nBest regards,\nJuliet\nNexora Automation"
+   },
    "crm": {
     "company": "SwiftLane Logistics",
     "contact": "Meera",
@@ -382,6 +390,10 @@ window.PRACTICE = [
     "Demoed before quantifying value.",
     "Accepted 'send it across' instead of booking a meeting."
    ],
+   "follow_up_email": {
+    "subject": "Discharge visibility pilot: next steps",
+    "body": "Hi Anil,\n\nThank you for walking me through the discharge challenge. Average discharge is over 6 hours across your 14 hospitals, and the medical director wants it under 3.\n\nI'll send a pilot proposal for two hospitals next week, designed to work with your on-prem HIS, keep patient data on your servers, and show results within three months. I'll aim to keep it under 25 lakh so it fits within your approval.\n\nCould we book 30 minutes next week to go through it together before it goes to Dr. Menon? I'd also like to estimate the cost of turned-away emergency admissions with you, so the business case has a clear number.\n\nBest regards,\nJuliet\nNexora Automation"
+   },
    "crm": {
     "company": "CareWell Hospitals",
     "contact": "Anil",
@@ -557,6 +569,10 @@ window.PRACTICE = [
     "Offered a discount before any need was established.",
     "Ended with a brochure instead of a next step."
    ],
+   "follow_up_email": {
+    "subject": "Following up after your RBI audit",
+    "body": "Hi Rohit,\n\nThanks for taking my call today, and apologies for jumping into features before learning about your priorities.\n\nI know the RBI audit is the focus this quarter, so I won't send a long brochure. Once the audit is done, would you be open to a 20-minute conversation about how KYC and loan document checks work at Kavya Finance today? If there's nothing worth fixing, I'll say so.\n\nI'll check back in after the quarter ends. Good luck with the audit.\n\nBest regards,\nJuliet\nNexora Automation"
+   },
    "crm": {
     "company": "Kavya Finance",
     "contact": "Rohit",
@@ -733,6 +749,10 @@ window.PRACTICE = [
    "improve": [
     "Could have asked what growth after Series A would look like, to judge timing better."
    ],
+   "follow_up_email": {
+    "subject": "Thanks, and talk in April",
+    "body": "Hi Nikhil,\n\nThanks for being so open today. At around 4,000 orders and one refund error a month, Zapier sounds like the right tool for Brewly right now.\n\nAs agreed, I'll check in after your Series A, around April. If volumes grow faster than expected before then, or reconciliation starts needing more people, feel free to reach out sooner.\n\nAll the best with the raise.\n\nBest regards,\nJuliet\nNexora Automation"
+   },
    "crm": {
     "company": "Brewly",
     "contact": "Nikhil",
@@ -904,6 +924,10 @@ window.PRACTICE = [
     "Accepted 'Anand won't join yet' without asking what he'll need to see.",
     "Didn't ask what Kavya thought of the Tally partner's add-on."
    ],
+   "follow_up_email": {
+    "subject": "Thursday 3pm: invoice demo with Rohit",
+    "body": "Hi Kavya,\n\nLooking forward to Thursday at 3pm with you and Rohit. If you can send the 10 sample invoices beforehand, I'll show them being captured live.\n\nTo make the call count towards your goals of a 5-day close and capturing 70% of early-payment discounts, it would help to cover:\n- what IT needs to check before a tool connects to Tally and your ERP\n- how you'd compare this with the Tally partner's add-on\n- what Anand would need to see to approve it\n\nBest regards,\nJuliet\nNexora Automation"
+   },
    "crm": {
     "company": "Brightline Retail",
     "contact": "Kavya",

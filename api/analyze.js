@@ -44,6 +44,8 @@ Score each element on how well the rep established it: 0 = not covered, 1 = part
 
 Verdict on the deal: "Advance" if it is well qualified and a concrete next meeting is booked; "Nurture" if there is real pain but important gaps or no firm next step; "Disqualify" if there is no clear pain, budget or fit, or the conversation gives no basis to pursue it.
 
+Also draft a short follow-up email from the rep to the buyer, written in the rep's voice: thank them, recap the key facts the buyer shared, and confirm the agreed next step, or propose one if none was booked. Under 160 words, no invented facts, signed with the rep's first name and company if they appear in the conversation.
+
 Write in plain English. Keep the currency and units the speakers used. CRM fields are short factual notes; write "Not discussed" when something is unknown.
 If the text is not a sales conversation, give every element 0 and say so in the summary.
 
@@ -64,7 +66,7 @@ function buildTool(frameworkKey) {
     description: `Record the ${fw.name} analysis of the sales conversation.`,
     input_schema: {
       type: "object",
-      required: ["summary", "verdict", "verdict_reason", "scores", "missed_questions", "next_steps", "strengths", "improve", "crm"],
+      required: ["summary", "verdict", "verdict_reason", "scores", "missed_questions", "next_steps", "strengths", "improve", "follow_up_email", "crm"],
       properties: {
         summary: str("Two sentences: who the prospect is and the situation."),
         verdict: { type: "string", enum: VERDICTS },
@@ -89,6 +91,11 @@ function buildTool(frameworkKey) {
         next_steps: list("3 or 4 concrete next actions for the rep.", 1, 4),
         strengths: list("2 or 3 things the rep did well.", 1, 3),
         improve: list("2 or 3 coaching points.", 1, 3),
+        follow_up_email: {
+          type: "object",
+          required: ["subject", "body"],
+          properties: { subject: str("Email subject line."), body: str("Email body with line breaks, under 160 words.") }
+        },
         crm: {
           type: "object",
           required: CRM_FIELDS.map(([k]) => k),
@@ -114,6 +121,7 @@ function validate(raw, frameworkKey) {
     const n = Math.round(Number(r.score));
     return { key: el.key, score: n >= 2 ? 2 : n >= 1 ? 1 : 0, evidence: s(r.evidence, 300), gap: s(r.gap, 300) };
   });
+  const mail = raw.follow_up_email && typeof raw.follow_up_email === "object" ? raw.follow_up_email : {};
   const crmIn = raw.crm && typeof raw.crm === "object" ? raw.crm : {};
   return {
     framework: frameworkKey,
@@ -127,6 +135,7 @@ function validate(raw, frameworkKey) {
     next_steps: list(raw.next_steps, 4),
     strengths: list(raw.strengths, 3),
     improve: list(raw.improve, 3),
+    follow_up_email: { subject: s(mail.subject, 200), body: s(mail.body, 2000) },
     crm: Object.fromEntries(CRM_FIELDS.map(([k]) => [k, s(crmIn[k], 400) || "Not discussed"]))
   };
 }
