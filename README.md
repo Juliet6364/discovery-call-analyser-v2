@@ -1,6 +1,6 @@
 # Discovery Call Analyser v2
 
-An AI coach for SDRs and outbound sales teams. Add a discovery call or a sales chat, and it:
+An AI coach for SDRs and outbound sales teams. **Role-play a discovery call or chat with an AI buyer**, or add a conversation of your own, and it:
 
 - **Scores how well the lead was qualified** with **MEDDICC**, **BANT** or **SPICED**, quoting the conversation as evidence for every score
 - **Flags what wasn't asked** and gives the exact questions to ask on the next call
@@ -12,7 +12,7 @@ An AI coach for SDRs and outbound sales teams. Add a discovery call or a sales c
 - **Saves a PDF report** of the scorecard, transcript, email and CRM notes
 - **Tracks progress**: average score over time, the elements you miss most often, and the selling skills that come up most in coaching
 
-Conversations can be **pasted**, uploaded as a **.txt** file, uploaded as an **audio recording**, or **recorded in the browser**. Audio is transcribed on the user's own device, so recordings are never uploaded.
+Conversations can come from a **role-play with an AI buyer**, or be **pasted**, uploaded as a **.txt** file, uploaded as an **audio recording**, or **recorded in the browser**. Audio is transcribed on the user's own device, so recordings are never uploaded.
 
 Version 1, built for my Business Analyst with Applied AI course, is at [discovery-call-analyser](https://github.com/Juliet6364/Discovery-call-analyser). This is a clean rebuild with audio input, three frameworks and a new design.
 
@@ -24,6 +24,7 @@ Version 1, built for my Business Analyst with Applied AI course, is at [discover
 | Frameworks | MEDDICC | MEDDICC, BANT, SPICED |
 | AI output | JSON parsed from free text | Forced tool call with a JSON schema, then validated |
 | Demo mode | Saved MEDDICC results for 5 calls | Saved results for 6 conversations in all 3 frameworks |
+| Practice | None | Role-play calls and chats with four AI buyers, live hints, and a reveal of what the buyer knew |
 | Outputs | Scorecard, CRM notes | Adds "Say it better" line-by-line coaching, highlighted transcript, follow-up email draft and PDF report |
 | Progress | History table | History plus a dashboard: score trend and most-missed elements |
 | Tests | None | Automated tests for validation, scoring bands and the API |
@@ -44,6 +45,17 @@ flowchart LR
 1. **Audio** is decoded in the browser, split at quiet moments into one-minute parts, and transcribed by Whisper (`whisper-base.en`) running on the device with Transformers.js. The first run downloads about 80 MB of model files, which the browser then keeps. Whisper doesn't identify speakers, so the prompt tells Claude to work out who is the rep and who is the buyer, and the user can add names before analysing.
 2. **The server** adds the chosen framework's rubric and forces Claude to answer through a `record_analysis` tool whose schema fixes the number of elements, the 0–2 score range and the three verdicts.
 3. **Validation** (`validate()` in `api/analyze.js`) checks every field again before anything reaches the page, so a malformed response can't break it.
+
+## Role-play with an AI buyer
+
+Reps practise on the page instead of on real prospects:
+
+1. **Pick a buyer, a channel and a difficulty.** Four fictional buyers, each with a different challenge: an open but busy finance head, a guarded CIO, a price-sceptical founder, and a tough VP who is already evaluating two vendors. Choose **Call** (talk into the microphone or type, and the buyer can answer out loud) or **Chat** (typed, WhatsApp style), and **Friendly**, **Realistic** or **Tough**. Reps can enter their own name and what they sell.
+2. **Run the conversation.** Each buyer has private facts (pain, numbers, budget, who signs off, decision process, paperwork, timeline, competition, a possible champion and objections). They only share a fact when the rep asks a question that earns it, push back on early pitching, and only agree to a next meeting if the rep has earned it.
+3. **Press Hint when stuck.** A separate coach reads the conversation so far (without seeing the buyer's private facts) and suggests the exact next line, tagged with the framework element it targets.
+4. **End and score.** The conversation goes straight into the analyser and opens on **Say it better**. The page then shows **What the buyer knew**, so the rep can see which facts they never uncovered.
+
+How it's built: `api/roleplay.js` keeps the buyer personas on the server (`public/personas.js`), so the page can't change how a buyer behaves, and the rep's "what you sell" text is passed to the model as data, not instructions. Replies use a faster model (`CLAUDE_ROLEPLAY_MODEL`, default `claude-haiku-5-5`) so the conversation feels live. In call mode the rep's speech is turned into text on the device with the same Whisper model used for uploads, and the buyer's voice uses the browser's built-in speech synthesis.
 
 ## Scoring
 
@@ -87,6 +99,7 @@ SPICED scores the average calls higher than MEDDICC because it doesn't ask about
 
 ## Responsible use
 
+- Role-play buyers and their companies are fictional. Role-play messages are sent to the AI only to play the buyer and give hints, and aren't stored.
 - Use role-played calls, or calls where everyone has agreed to be recorded and reviewed. The page says so next to the Analyse button.
 - Audio never leaves the device. Transcripts are sent to the AI only when the user clicks Analyse.
 - No database: history is kept in the browser's local storage.
@@ -99,12 +112,14 @@ SPICED scores the average calls higher than MEDDICC because it doesn't ask about
 - The first transcription needs a download of about 80 MB and works best in a recent desktop Chrome or Edge. Long recordings are slow on older phones. Recordings over 45 minutes are refused.
 - AI scores can vary slightly between runs.
 - History is per browser and doesn't sync between devices.
+- In voice role-play the rep presses the microphone to talk and again to send, so it feels like a walkie-talkie rather than a phone call. Each turn takes a few seconds to transcribe.
+- The AI buyer can occasionally reveal more than it should or drift from its facts; the "What the buyer knew" panel is the reference.
 
 ## Set up
 
 1. Deploy this repository to Vercel (no build step; static files are in `public/`, the function in `api/`).
-2. In the Vercel project, add the environment variable `ANTHROPIC_API_KEY`. Optionally set `CLAUDE_MODEL` (default `claude-sonnet-5-5`).
-3. Without a key the site still works: practice conversations show saved results, and transcription works, but live analysis shows a message.
+2. In the Vercel project, add the environment variable `ANTHROPIC_API_KEY`. Optionally set `CLAUDE_MODEL` (default `claude-sonnet-5-5`) for analysis and `CLAUDE_ROLEPLAY_MODEL` (default `claude-haiku-5-5`) for the AI buyer and hints.
+3. Without a key the site still works: practice conversations show saved results, and transcription works, but live analysis and role-play show a message.
 
 Run the tests with `npm test` (Node 18 or later, no dependencies).
 
@@ -112,12 +127,14 @@ Run the tests with `npm test` (Node 18 or later, no dependencies).
 
 ```
 api/analyze.js            Prompt, Claude API call, schema and validation
+api/roleplay.js           AI buyer replies and live hints
 public/index.html         The web app
 public/frameworks.js      MEDDICC, BANT and SPICED definitions, shared by page and API
+public/personas.js        AI buyers and their private facts, shared by page and API
 public/samples.js         Practice conversations and saved results
 public/transcribe-worker.js  In-browser speech-to-text
 sample-transcripts/       The practice conversations as .txt files
-test/analyze.test.js      Automated tests
+test/                     Automated tests for both API functions
 ```
 
 Built by [Juliet Arambam](https://www.linkedin.com/in/juliet-arambam1).

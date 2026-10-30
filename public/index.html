@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Discovery Call Analyser</title>
-<meta name="description" content="Score a sales discovery call or chat with MEDDICC, BANT or SPICED. See what wasn't asked and what to say better, get the questions for your next call, a follow-up email and CRM notes. Works with transcripts, chats and audio recordings.">
+<meta name="description" content="Role-play a sales discovery call or chat with an AI buyer, then score it with MEDDICC, BANT or SPICED. See what wasn't asked and what to say better, get the questions for your next call, a follow-up email and CRM notes. Works with transcripts, chats and audio recordings.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&family=Familjen+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -52,7 +52,7 @@ svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-widt
 .hero h1{font-size:clamp(38px,5.4vw,64px);font-weight:700;line-height:1.02;letter-spacing:-.025em;max-width:13ch}
 .hero .lede{color:var(--on-night-2);font-size:19px;margin-top:20px;max-width:46ch}
 .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
-.btn-hero{display:inline-flex;align-items:center;gap:8px;border-radius:var(--r-sm);padding:13px 20px;font-weight:700;font-size:16px;cursor:pointer;border:1.5px solid #fff;text-decoration:none}
+.btn-hero{display:inline-flex;align-items:center;gap:8px;border-radius:var(--r-sm);padding:13px 16px;font-weight:700;font-size:16px;cursor:pointer;border:1.5px solid #fff;text-decoration:none}
 .btn-hero.solid{background:#fff;color:var(--night)}
 .btn-hero.solid:hover{background:var(--cobalt-wash)}
 .btn-hero.ghost{background:transparent;color:#fff;border-color:#5A6C8C}
@@ -163,6 +163,76 @@ textarea:focus{border-color:var(--cobalt)}
 .practice li button:hover{background:var(--paper)}
 .practice li button[aria-current="true"]{background:var(--cobalt-wash);color:var(--cobalt-ink);font-weight:600}
 .practice li small{color:var(--ink-3);font-size:13px;white-space:nowrap}
+
+/* ---------- Role-play ---------- */
+.roleplay{padding-top:56px}
+.rp-setup{padding:22px;position:sticky;top:16px}
+.buyers{display:grid;gap:8px}
+.bcard{display:flex;gap:12px;align-items:center;text-align:left;width:100%;border:1.5px solid var(--line);background:var(--surface);border-radius:var(--r-sm);padding:10px 12px;cursor:pointer}
+.bcard:hover{border-color:var(--ink-3)}
+.bcard[aria-pressed="true"]{border-color:var(--cobalt);background:var(--cobalt-wash)}
+.bcard b{display:block;font-size:15px}
+.bcard small{display:block;font-size:13px;color:var(--ink-2);line-height:1.35}
+.bcard em{font-style:normal;font-size:12.5px;color:var(--cobalt-ink);font-weight:600}
+.av{width:38px;height:38px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:15px;flex:none}
+.av.lg{width:46px;height:46px;font-size:17px}
+.opt-row{display:flex;gap:10px 16px;flex-wrap:wrap;align-items:center}
+.rp-setup input[type=text],.rp-setup textarea{width:100%;border:1px solid var(--line);border-radius:var(--r-sm);padding:9px 11px;font-size:14.5px;background:var(--surface)}
+.rp-setup textarea{min-height:84px}
+details.more summary{cursor:pointer;font-weight:600;font-size:15px}
+details.more[open] summary{margin-bottom:10px}
+.rp-stage{min-height:560px;display:flex;flex-direction:column;overflow:hidden}
+.rp-head{display:flex;gap:12px;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line-2)}
+.rp-head h3{font-size:18px}
+.rp-head p{font-size:14px;color:var(--ink-2)}
+.rp-head .meta{margin-left:auto;text-align:right;white-space:nowrap;font-size:13.5px;color:var(--ink-2)}
+.rp-head .meta b{display:block;font-family:var(--display);font-size:22px;color:var(--ink)}
+.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--disq);margin-right:6px;animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.3}}
+.brief{padding:28px 30px}
+.brief h3{font-size:22px;margin-top:6px}
+.brief .ctx{margin-top:14px;padding:14px 16px;background:var(--paper);border-radius:var(--r-sm);max-width:62ch}
+.brief .ctx b{display:block;font-size:13px;color:var(--ink-2);letter-spacing:.02em}
+.brief ol{margin:18px 0 0;padding-left:20px;color:var(--ink-2);max-width:60ch}
+.brief li+li{margin-top:6px}
+.msgs{flex:1;overflow-y:auto;padding:18px 20px;display:flex;flex-direction:column;gap:10px;max-height:520px;min-height:300px;background:var(--paper)}
+.msg{max-width:78%;padding:10px 14px;border-radius:14px;font-size:15.5px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.msg small{display:block;font-size:12px;font-weight:700;margin-bottom:2px;opacity:.75}
+.msg.buyer{align-self:flex-start;background:var(--surface);border:1px solid var(--line);border-bottom-left-radius:4px}
+.msg.rep{align-self:flex-end;background:var(--cobalt);color:#fff;border-bottom-right-radius:4px}
+.msg.sys{align-self:center;background:none;color:var(--ink-2);font-size:14px;text-align:center;max-width:90%;padding:4px}
+.msg.sys.err{color:var(--disq)}
+.typing{display:inline-flex;gap:4px;padding:4px 0}
+.typing i{width:7px;height:7px;border-radius:50%;background:var(--ink-3);animation:blink 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.hintc{margin:0 20px;border:1px solid var(--line);border-left:4px solid var(--advance);border-radius:var(--r-sm);padding:10px 14px;background:var(--advance-wash);font-size:15px;display:grid;gap:4px}
+.hintc .top{display:flex;gap:8px;align-items:center;font-size:13px;font-weight:700;color:var(--advance)}
+.hintc .top .chip{margin-left:auto;background:var(--surface);color:var(--ink-2);font-size:12.5px}
+.hintc q{quotes:"“" "”";font-size:16px}
+.hintc p{font-size:14px;color:var(--ink-2)}
+.hintc .acts{display:flex;gap:8px;margin-top:4px}
+.composer{padding:14px 20px 18px;border-top:1px solid var(--line-2);display:grid;gap:10px}
+.compose-row{display:flex;gap:8px;align-items:flex-end}
+.compose-row textarea{min-height:46px;height:46px;max-height:140px;resize:none;flex:1;font-size:15px}
+.mic{width:46px;height:46px;border-radius:50%;border:0;background:var(--ink);color:#fff;display:grid;place-items:center;cursor:pointer;flex:none}
+.mic svg{width:20px;height:20px}
+.mic.on{background:var(--disq);animation:pulse 1.4s ease-in-out infinite}
+.mic:disabled{opacity:.5;cursor:not-allowed}
+.send{height:46px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tools .check{font-size:14px;margin-left:auto}
+.btn.end{background:var(--ink);color:#fff}
+.btn.end:hover{background:var(--night-2)}
+.voice-note{font-size:13.5px;color:var(--ink-2)}
+.reveal{padding:22px 24px 26px;border-top:1px solid var(--line-2)}
+.reveal h3{font-size:20px}
+.reveal>p{color:var(--ink-2);margin-top:4px;font-size:15px;max-width:66ch}
+.facts{margin:14px 0 0;display:grid;grid-template-columns:170px minmax(0,1fr);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.facts dt,.facts dd{margin:0;padding:9px 14px;border-bottom:1px solid var(--line-2);font-size:14.5px}
+.facts dt{font-weight:600;color:var(--ink-2);background:var(--paper)}
+.facts>*:nth-last-child(-n+2){border-bottom:0}
+.reveal .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
 
 /* ---------- Results ---------- */
 .results{min-height:520px;overflow:hidden}
@@ -355,7 +425,7 @@ footer a{color:#fff}
 @media (max-width:980px){
   .hero-grid{grid-template-columns:1fr;gap:36px;padding:28px 0 52px}
   .layout{grid-template-columns:1fr}
-  .input{position:static}
+  .input,.rp-setup{position:static}
   .steps{grid-template-columns:1fr}
   .charts{grid-template-columns:1fr}
 }
@@ -382,6 +452,17 @@ footer a{color:#fff}
   .crm dt{border-bottom:0;padding-bottom:0}
   .tiles{grid-template-columns:1fr}
   .dash,.history{padding:18px 16px}
+  .rp-setup{padding:18px}
+  .rp-head{padding:14px 16px}
+  .brief{padding:22px 18px}
+  .msgs{padding:14px 12px}
+  .msg{max-width:88%}
+  .composer{padding:12px 12px 14px}
+  .hintc{margin:0 12px}
+  .tools .check{margin-left:0}
+  .facts{grid-template-columns:1fr}
+  .facts dt{border-bottom:0;padding-bottom:2px}
+  .reveal{padding:18px 16px 22px}
   th:nth-child(3),td:nth-child(3){display:none}
 }
 @media (prefers-reduced-motion:reduce){
@@ -390,7 +471,7 @@ footer a{color:#fff}
 }
 @media print{
   body{background:#fff;font-size:12pt}
-  .hero,.how,.sec-head,.input,.progress-sec,.history-sec,footer,.rtabs,.report-actions,.notice,.mail-actions,.crm-head button,.toast,.tip{display:none!important}
+  .hero,.how,.roleplay,.sec-head,.input,.progress-sec,.history-sec,footer,.rtabs,.report-actions,.notice,.mail-actions,.crm-head button,.toast,.tip{display:none!important}
   .layout{display:block}
   .panel{border:0}
   .rpanel[hidden]{display:block!important}
@@ -429,6 +510,7 @@ footer a{color:#fff}
       <a class="logo" href="#top" id="top"><i aria-hidden="true"><b></b><b></b><b></b></i>Discovery Call Analyser</a>
       <div class="nav-links">
         <a href="#how">How it works</a>
+        <a href="#roleplay" class="keep">Role-play</a>
         <a href="#analyse" class="keep">Analyse</a>
         <a href="#progress">Progress</a>
         <a href="#history">History</a>
@@ -437,13 +519,15 @@ footer a{color:#fff}
     </nav>
     <div class="hero-grid">
       <div>
-        <h1>See what your discovery call missed</h1>
-        <p class="lede">Score any sales conversation against MEDDICC, BANT or SPICED, with a quote behind every score. Then get the questions for your next call, a follow-up email and CRM notes.</p>
+        <h1>Practise the call. See what it missed.</h1>
+        <p class="lede">Role-play a discovery call or chat with an AI buyer, then score it against MEDDICC, BANT or SPICED, with a quote behind every score. See what to say better, and get the questions for your next call, a follow-up email and CRM notes.</p>
         <div class="cta">
-          <button type="button" class="btn-hero solid" id="try">Try a practice call</button>
-          <a class="btn-hero ghost" href="#analyse" id="own">Analyse your own call</a>
+          <a class="btn-hero solid" href="#roleplay" id="rp-cta">Role-play with an AI buyer</a>
+          <button type="button" class="btn-hero ghost" id="try">See a scored call</button>
+          <a class="btn-hero ghost" href="#analyse" id="own">Analyse a call</a>
         </div>
         <div class="works">
+          <span><svg class="i"><use href="#i-chat"/></svg>AI buyer role-play</span>
           <span><svg class="i"><use href="#i-text"/></svg>Call transcripts</span>
           <span><svg class="i"><use href="#i-chat"/></svg>WhatsApp and email threads</span>
           <span><svg class="i"><use href="#i-upload"/></svg>Audio files</span>
@@ -458,10 +542,50 @@ footer a{color:#fff}
 <section class="wrap how" id="how" aria-labelledby="h-how">
   <h2 id="h-how">How it works</h2>
   <ol class="steps">
-    <li><div class="ic"><svg class="i"><use href="#i-mic"/></svg></div><h3>Add the conversation</h3><p>Paste a transcript or chat, upload a file or recording, or record a role-play here. Audio is transcribed on your device.</p></li>
+    <li><div class="ic"><svg class="i"><use href="#i-mic"/></svg></div><h3>Have the conversation</h3><p>Role-play a call or chat with an AI buyer who only reveals what you earn with good questions. Or paste, upload or record your own role-play.</p></li>
     <li><div class="ic"><svg class="i"><use href="#i-score"/></svg></div><h3>Score the qualification</h3><p>Each element of your framework is checked and backed by a quote from the call, or flagged as not covered.</p></li>
     <li><div class="ic"><svg class="i"><use href="#i-send"/></svg></div><h3>Act on it</h3><p>See what to say better next time, line by line. Get a deal verdict, the questions for your next call, a follow-up email, CRM notes and a PDF report.</p></li>
   </ol>
+</section>
+
+<section class="roleplay" id="roleplay" aria-labelledby="h-rp">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <h2 class="sec-title" id="h-rp">Role-play with an AI buyer</h2>
+        <p>Pick a buyer and run a discovery call or chat. Each buyer has facts they'll only share if you ask the right questions. When you finish, the conversation is scored and you'll see everything the buyer knew.</p>
+      </div>
+    </div>
+  </div>
+  <div class="wrap layout">
+    <div class="panel rp-setup" id="rp-setup">
+      <div class="field">
+        <span class="label" id="buyer-label">Buyer</span>
+        <div class="buyers" role="group" aria-labelledby="buyer-label" id="buyers"></div>
+      </div>
+      <div class="field">
+        <span class="label" id="ch-label">Practise a</span>
+        <div class="opt-row">
+          <div class="seg" role="group" aria-labelledby="ch-label" id="rp-channel">
+            <button type="button" data-v="call" aria-pressed="true">Call</button>
+            <button type="button" data-v="chat" aria-pressed="false">Chat</button>
+          </div>
+          <div class="seg" role="group" aria-label="Difficulty" id="rp-diff"></div>
+        </div>
+        <p class="hint" style="margin-top:8px" id="rp-ch-hint"></p>
+      </div>
+      <details class="field more">
+        <summary>Your name and what you sell</summary>
+        <label class="hint" for="rp-name">Your name and company, used in the transcript and follow-up email</label>
+        <input type="text" id="rp-name" placeholder="For example: Juliet, Nexora Automation" maxlength="60" style="margin:4px 0 12px">
+        <label class="hint" for="rp-offer">What you sell. The buyer reacts to this.</label>
+        <textarea id="rp-offer" maxlength="500" style="margin-top:4px"></textarea>
+      </details>
+      <button type="button" class="btn primary" id="rp-start">Start role-play</button>
+      <p class="hint" style="margin-top:10px">Scored with the framework chosen in Analyse below (<b id="rp-fw">MEDDICC</b>).</p>
+    </div>
+    <div class="panel rp-stage" id="rp-stage" aria-live="polite"></div>
+  </div>
 </section>
 
 <main class="analyse" id="analyse">
@@ -582,6 +706,7 @@ footer a{color:#fff}
 
 <script src="frameworks.js"></script>
 <script src="samples.js"></script>
+<script src="personas.js"></script>
 <script>
 (() => {
 const { FRAMEWORKS, CRM_FIELDS, SKILLS, band } = window.DCA;
@@ -659,6 +784,8 @@ function renderFramework() {
   $("#fw").innerHTML = Object.keys(FRAMEWORKS).map(k =>
     `<button type="button" data-fw="${k}" aria-pressed="${k === state.framework}"><b>${k}</b><span>${FRAMEWORKS[k].elements.length} elements</span></button>`).join("");
   $("#fw-blurb").textContent = FRAMEWORKS[state.framework].blurb;
+  $("#rp-fw").textContent = state.framework;
+  if (typeof rp !== "undefined" && !rp.live && !rp.ended) renderBrief();
 }
 $("#fw").addEventListener("click", (e) => {
   const b = e.target.closest("button[data-fw]"); if (!b || state.busy) return;
@@ -994,7 +1121,9 @@ $("#form").addEventListener("submit", async (e) => {
   if (state.practice && value === state.practice.text) { showPractice(state.practice, true); return; }
   if (!value) { selectTab($("#tab-paste")); text.focus(); toast("Add a conversation first"); return; }
   if (value.length < 80) { toast("This conversation is too short to score"); return; }
-
+  analyse(value);
+});
+async function analyse(value, label, tab) {
   setBusy(true, "Analysing, about a minute…");
   const fw = state.framework;
   $("#results").innerHTML = `<div class="empty">${stripHTML(fw, null)}<h2>Reading the conversation</h2><p>Checking each ${fw} element, pulling quotes as evidence, finding the lines to say better and drafting your follow-up email. This usually takes under a minute.</p></div>`;
@@ -1013,16 +1142,16 @@ $("#form").addEventListener("submit", async (e) => {
       return;
     }
     data.transcript = value;
-    state.result = data; state.rtab = "score";
+    state.result = data; state.rtab = tab || "score";
     renderResult(data, {});
-    saveHistory(data, data.crm?.company && data.crm.company !== "Not discussed" ? data.crm.company : "Your conversation");
+    saveHistory(data, label || (data.crm?.company && data.crm.company !== "Not discussed" ? data.crm.company : "Your conversation"));
     toast("Analysis ready");
   } catch {
     $("#results").innerHTML = `<div class="empty"><div class="notice err">Couldn't reach the server. Check your connection and try again. Your text is still in the box.</div>${stripHTML(fw, null)}</div>`;
   } finally {
     setBusy(false);
   }
-});
+}
 
 /* ---------- History and CSV ---------- */
 const HKEY = "dca2.history";
@@ -1316,9 +1445,306 @@ $("#rec-btn").addEventListener("click", async () => {
 });
 $("#rec-go").addEventListener("click", () => recBlob && transcribe(recBlob, "#rec-progress"));
 
+/* ---------- Role-play with an AI buyer ---------- */
+const { PERSONAS, DIFFICULTY, FACT_LABELS, DEFAULT_OFFER } = window.DCA_ROLEPLAY;
+const rp = {
+  persona: store.get("dca2.rp.persona", PERSONAS[0].id), channel: store.get("dca2.rp.channel", "call"),
+  difficulty: store.get("dca2.rp.diff", "realistic"), speak: store.get("dca2.rp.speak", true),
+  live: false, ended: false, waiting: false, log: [], t0: 0, timer: null, hint: null, rec: null, listening: false
+};
+if (!PERSONAS.some(p => p.id === rp.persona)) rp.persona = PERSONAS[0].id;
+if (!DIFFICULTY[rp.difficulty]) rp.difficulty = "realistic";
+const persona = () => PERSONAS.find(p => p.id === rp.persona);
+const initials = (n) => n.split(" ").map(w => w[0]).join("").slice(0, 2);
+const firstName = (n) => n.split(" ")[0];
+const stage = $("#rp-stage");
+$("#rp-offer").value = store.get("dca2.rp.offer", DEFAULT_OFFER);
+$("#rp-name").value = store.get("dca2.rp.name", "");
+$("#rp-offer").addEventListener("change", (e) => store.set("dca2.rp.offer", e.target.value.trim()));
+$("#rp-name").addEventListener("change", (e) => store.set("dca2.rp.name", e.target.value.trim()));
+
+function renderSetup() {
+  $("#buyers").innerHTML = PERSONAS.map(p => `<button type="button" class="bcard" data-p="${p.id}" aria-pressed="${p.id === rp.persona}" ${rp.live ? "disabled" : ""}>
+      <span class="av" aria-hidden="true">${initials(p.name)}</span>
+      <span><b>${esc(p.name)}</b><small>${esc(p.role)}, ${esc(p.company)}</small><em>${esc(p.tag)}</em></span></button>`).join("");
+  document.querySelectorAll("#rp-channel button").forEach(b => { b.setAttribute("aria-pressed", b.dataset.v === rp.channel); b.disabled = rp.live; });
+  $("#rp-diff").innerHTML = Object.entries(DIFFICULTY).map(([k, d]) => `<button type="button" data-v="${k}" aria-pressed="${k === rp.difficulty}" ${rp.live ? "disabled" : ""}>${d.label}</button>`).join("");
+  $("#rp-ch-hint").textContent = rp.channel === "call"
+    ? "Talk using your microphone, or type. The buyer can answer out loud."
+    : "Type messages, like a WhatsApp or LinkedIn chat.";
+  $("#rp-start").textContent = rp.live ? "Role-play in progress" : rp.ended ? "Start a new role-play" : "Start role-play";
+  $("#rp-start").disabled = rp.live;
+}
+$("#buyers").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-p]"); if (!b || rp.live) return;
+  rp.persona = b.dataset.p; store.set("dca2.rp.persona", rp.persona); rp.ended = false; renderSetup(); renderBrief();
+});
+$("#rp-channel").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-v]"); if (!b || rp.live) return;
+  rp.channel = b.dataset.v; store.set("dca2.rp.channel", rp.channel); rp.ended = false; renderSetup(); renderBrief();
+});
+$("#rp-diff").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-v]"); if (!b || rp.live) return;
+  rp.difficulty = b.dataset.v; store.set("dca2.rp.diff", rp.difficulty); renderSetup();
+});
+
+function renderBrief() {
+  const p = persona();
+  stage.innerHTML = `<div class="brief">
+    <span class="av lg" aria-hidden="true">${initials(p.name)}</span>
+    <h3>${esc(p.name)}, ${esc(p.role)}</h3>
+    <p class="hint">${esc(p.company)} · ${esc(p.tag)}</p>
+    <div class="ctx"><b>WHAT YOU KNOW GOING IN</b>${esc(p.context)}</div>
+    <ol>
+      <li>Open the ${rp.channel}, set an agenda, and find out what's going on before you pitch.</li>
+      <li>Ask open questions to uncover each ${esc(state.framework)} element. ${esc(firstName(p.name))} won't volunteer budget, sign-off, competitors or deadlines.</li>
+      <li>Stuck? Press <b>Hint</b> for the next line to try.</li>
+      <li>Close for a specific next step, then press <b>End and score</b>.</li>
+    </ol>
+    <p class="hint" style="margin-top:18px">${esc(p.name)} and ${esc(p.company)} are fictional. The conversation is sent to the AI to play the buyer, and isn't stored on a server.</p>
+  </div>`;
+}
+
+function startRoleplay() {
+  if (rp.live) return;
+  const p = persona();
+  rp.live = true; rp.ended = false; rp.waiting = false; rp.hint = null;
+  rp.log = [{ role: "buyer", text: p.opening[rp.channel] }];
+  rp.t0 = Date.now();
+  clearInterval(rp.timer); rp.timer = setInterval(tickTimer, 1000);
+  renderSetup(); renderStage();
+  speak(p.opening[rp.channel]);
+  setTimeout(() => $("#rp-input")?.focus({ preventScroll: true }), 50);
+}
+$("#rp-start").addEventListener("click", () => {
+  startRoleplay();
+  if (window.matchMedia("(max-width:980px)").matches) stage.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+function tickTimer() { const t = $("#rp-time"); if (t) t.textContent = fmtTime((Date.now() - rp.t0) / 1000); }
+
+function renderStage() {
+  const p = persona(), repTurns = rp.log.filter(m => m.role === "rep").length;
+  const voice = rp.channel === "call";
+  stage.innerHTML = `
+    <div class="rp-head">
+      <span class="av" aria-hidden="true">${initials(p.name)}</span>
+      <div><h3>${esc(p.name)}</h3><p>${esc(p.role)}, ${esc(p.company)}</p></div>
+      <div class="meta">${rp.live ? `<span class="live-dot" aria-hidden="true"></span>${voice ? "On a call" : "Chatting"}` : "Ended"}<b id="rp-time">${fmtTime((Date.now() - rp.t0) / 1000)}</b></div>
+    </div>
+    <div class="msgs" id="rp-msgs"></div>
+    ${rp.hint ? `<div class="hintc" role="status">
+        <div class="top">${icon("q")}Try this next<span class="chip">${esc(rp.hint.focus)}</span></div>
+        <q>${esc(rp.hint.line)}</q><p>${esc(rp.hint.why)}</p>
+        <div class="acts"><button type="button" class="btn small" id="hint-use">Use this line</button><button type="button" class="btn small quiet" id="hint-x">Dismiss</button></div>
+      </div>` : ""}
+    <div class="composer">
+      ${rp.live ? `<div class="compose-row">
+        ${voice ? `<button type="button" class="mic${rp.listening ? " on" : ""}" id="rp-mic" aria-label="${rp.listening ? "Stop and send" : "Talk"}" ${rp.waiting ? "disabled" : ""}>${icon("mic")}</button>` : ""}
+        <label for="rp-input" class="sr">Your message</label>
+        <textarea id="rp-input" placeholder="${voice ? "Press the microphone and talk, or type here" : "Type a message"}" ${rp.waiting ? "disabled" : ""}></textarea>
+        <button type="button" class="btn send" id="rp-send" ${rp.waiting ? "disabled" : ""}>${icon("send")}Send</button>
+      </div>
+      ${voice ? `<p class="voice-note" id="rp-vnote">Speech is turned into text on your device; the audio isn't uploaded. The first time, this downloads about 80 MB.</p>` : ""}` : ""}
+      <div class="tools">
+        ${rp.live ? `<button type="button" class="btn small quiet" id="rp-hint" ${rp.waiting || !repTurns ? "disabled" : ""}>${icon("q")}Hint</button>` : ""}
+        ${rp.ended ? "" : `<button type="button" class="btn small end" id="rp-end">${icon("score")}End and score</button>`}
+        ${rp.live ? `<button type="button" class="btn small quiet" id="rp-quit">Quit without scoring</button>` : ""}
+        ${voice && rp.live && "speechSynthesis" in window ? `<label class="check"><input type="checkbox" id="rp-speak" ${rp.speak ? "checked" : ""}>Buyer speaks out loud</label>` : ""}
+      </div>
+    </div>
+    <div id="rp-reveal"></div>`;
+  renderMsgs();
+  bindStage();
+}
+
+function renderMsgs(extra) {
+  const box = $("#rp-msgs"); if (!box) return;
+  const p = persona(), me = repName();
+  box.innerHTML = rp.log.map(m => m.role === "sys"
+      ? `<div class="msg sys${m.err ? " err" : ""}">${esc(m.text)}</div>`
+      : `<div class="msg ${m.role}"><small>${esc(m.role === "rep" ? me.short : firstName(p.name))}</small>${esc(m.text)}</div>`).join("")
+    + (rp.waiting ? `<div class="msg buyer" aria-label="${esc(firstName(p.name))} is ${rp.channel === "call" ? "speaking" : "typing"}"><span class="typing"><i></i><i></i><i></i></span></div>` : "")
+    + (extra || "");
+  box.scrollTop = box.scrollHeight;
+}
+
+function bindStage() {
+  const input = $("#rp-input");
+  if (input) {
+    input.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendRep(); } });
+    input.addEventListener("input", () => { input.style.height = "46px"; input.style.height = Math.min(140, input.scrollHeight + 2) + "px"; });
+  }
+  $("#rp-send")?.addEventListener("click", sendRep);
+  $("#rp-hint")?.addEventListener("click", getHint);
+  $("#rp-end")?.addEventListener("click", endAndScore);
+  $("#rp-quit")?.addEventListener("click", () => { stopAll(); rp.live = false; rp.ended = false; renderSetup(); renderBrief(); });
+  $("#rp-mic")?.addEventListener("click", toggleMic);
+  $("#rp-speak")?.addEventListener("change", (e) => { rp.speak = e.target.checked; store.set("dca2.rp.speak", rp.speak); if (!rp.speak) window.speechSynthesis?.cancel(); });
+  $("#hint-use")?.addEventListener("click", () => { const t = rp.hint.line; rp.hint = null; renderStage(); const i = $("#rp-input"); if (i) { i.value = t; i.focus(); } });
+  $("#hint-x")?.addEventListener("click", () => { rp.hint = null; renderStage(); });
+}
+
+function repName() {
+  const raw = $("#rp-name").value.trim();
+  if (!raw) return { short: "You", label: "Rep", first: "Rep" };
+  const [name, ...rest] = raw.split(",").map(s => s.trim());
+  const company = rest.join(", ");
+  return { short: name || "You", label: company ? `${name} (${company})` : name, first: name };
+}
+
+function payload(mode) {
+  return {
+    mode, persona: rp.persona, difficulty: rp.difficulty, channel: rp.channel, framework: state.framework,
+    offer: $("#rp-offer").value.trim(),
+    messages: rp.log.slice(1).filter(m => m.role === "rep" || m.role === "buyer").map(({ role, text }) => ({ role, text }))
+  };
+}
+async function post(body) {
+  const res = await fetch("/api/roleplay", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+  let data = {}; try { data = await res.json(); } catch {}
+  if (!res.ok) throw Object.assign(new Error(data.message || `Something went wrong (error ${res.status}). Try again.`), { code: data.code });
+  return data;
+}
+
+async function sendRep(textIn) {
+  if (!rp.live || rp.waiting) return;
+  const input = $("#rp-input");
+  const t = (typeof textIn === "string" ? textIn : input?.value || "").trim();
+  if (!t) { input?.focus(); return; }
+  window.speechSynthesis?.cancel();
+  rp.log = rp.log.filter(m => m.role !== "sys");
+  rp.log.push({ role: "rep", text: t }); rp.hint = null; rp.waiting = true;
+  renderStage();
+  try {
+    const d = await post(payload("reply"));
+    rp.waiting = false;
+    rp.log.push({ role: "buyer", text: d.reply });
+    if (d.ended) {
+      rp.log.push({ role: "sys", text: `${firstName(persona().name)} has ended the ${rp.channel}. Press End and score to see how you did.` });
+      rp.live = false; clearInterval(rp.timer); renderSetup();
+    }
+    renderStage(); speak(d.reply);
+  } catch (e) {
+    rp.waiting = false;
+    rp.log.pop(); // take the message back so it can be sent again
+    rp.log.push({ role: "sys", text: e.message, err: true });
+    renderStage();
+    const i = $("#rp-input"); if (i) i.value = t;
+  }
+  $("#rp-input")?.focus({ preventScroll: true });
+}
+
+async function getHint() {
+  if (!rp.live || rp.waiting) return;
+  const b = $("#rp-hint"); b.disabled = true; b.innerHTML = `${icon("q")}Thinking…`;
+  try { rp.hint = await post(payload("hint")); renderStage(); }
+  catch (e) { toast(e.message); b.disabled = false; b.innerHTML = `${icon("q")}Hint`; }
+}
+
+/* Buyer voice: the browser's built-in speech synthesis */
+let voices = [];
+function loadVoices() { try { voices = window.speechSynthesis.getVoices(); } catch { voices = []; } }
+if ("speechSynthesis" in window) { loadVoices(); window.speechSynthesis.onvoiceschanged = loadVoices; }
+function speak(t) {
+  if (rp.channel !== "call" || !rp.speak || !("speechSynthesis" in window)) return;
+  try {
+    const u = new SpeechSynthesisUtterance(t);
+    const en = voices.filter(v => /^en/i.test(v.lang));
+    u.voice = en.find(v => /en[-_]IN/i.test(v.lang)) || en.find(v => /en[-_]GB/i.test(v.lang)) || en[0] || null;
+    u.rate = 1.03;
+    window.speechSynthesis.cancel(); window.speechSynthesis.speak(u);
+  } catch {}
+}
+
+/* Rep voice: record a turn, then transcribe it on the device with the same Whisper worker */
+function vnote(msg) { const n = $("#rp-vnote"); if (n) n.textContent = msg; }
+async function toggleMic() {
+  if (rp.waiting) return;
+  if (rp.rec) { rp.rec.stop(); return; }
+  if (state.busy) { toast("Wait for the current transcription or analysis to finish"); return; }
+  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) { vnote("Voice isn't supported in this browser. Type your lines instead."); return; }
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }); }
+  catch { vnote("Microphone access was blocked. Allow it in your browser's site settings, or type instead."); return; }
+  window.speechSynthesis?.cancel();
+  const chunks = [], mr = new MediaRecorder(stream);
+  mr.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+  mr.onstop = async () => {
+    stream.getTracks().forEach(t => t.stop());
+    rp.rec = null; rp.listening = false; renderStage();
+    const blob = new Blob(chunks, { type: mr.mimeType || "audio/webm" });
+    const mic = $("#rp-mic"); if (mic) mic.disabled = true;
+    try {
+      const said = await transcribeTurn(blob);
+      if (!said) { vnote("Didn't catch that. Try again, a little closer to the microphone."); if (mic) mic.disabled = false; return; }
+      sendRep(said);
+    } catch (e) { vnote(e.message); if (mic) mic.disabled = false; }
+  };
+  mr.start(); rp.rec = mr; rp.listening = true; renderStage();
+  vnote("Listening… press the microphone again when you've finished speaking.");
+}
+async function transcribeTurn(blob) {
+  vnote("Turning your speech into text…");
+  let audio;
+  try { audio = await decode(blob); } catch { throw new Error("Couldn't read the recording. Try again or type instead."); }
+  if (audio.length < 16000 * 0.4) return "";
+  const out = await new Promise((resolve, reject) => {
+    const w = getWorker();
+    w.onmessage = ({ data }) => {
+      if (data.type === "stage" && data.stage === "loading") vnote("Preparing speech recognition…");
+      if (data.type === "download") vnote(`Downloading speech recognition (first time only): ${fmtMB(data.loaded)} of ${fmtMB(data.total)}`);
+      if (data.type === "stage" && data.stage === "transcribing") vnote("Turning your speech into text…");
+      if (data.type === "done") resolve(data.text);
+      if (data.type === "error") reject(new Error("Speech recognition failed. Type your line instead."));
+    };
+    w.onerror = () => reject(new Error("Speech recognition couldn't start in this browser. Type your line instead."));
+    w.postMessage({ type: "transcribe", audio }, [audio.buffer]);
+  });
+  vnote("Press the microphone and talk, or type.");
+  return out.split("\n").map(l => l.replace(/^\[\d{2}:\d{2}\]\s*/, "").trim()).filter(Boolean).join(" ");
+}
+
+function stopAll() {
+  clearInterval(rp.timer); window.speechSynthesis?.cancel();
+  if (rp.rec) { rp.rec.onstop = null; rp.rec.stream?.getTracks().forEach(t => t.stop()); try { rp.rec.stop(); } catch {} rp.rec = null; rp.listening = false; }
+}
+
+function roleplayTranscript() {
+  const p = persona(), me = repName();
+  let repSeen = false;
+  return rp.log.filter(m => m.role !== "sys").map((m, i) => {
+    if (m.role === "buyer") return `${i === 0 ? `${p.name} (${p.role}, ${p.company})` : firstName(p.name)}: ${m.text}`;
+    const label = repSeen ? me.first : me.label; repSeen = true;
+    return `${label}: ${m.text}`;
+  }).join("\n");
+}
+
+function endAndScore() {
+  if (rp.waiting) return;
+  const reps = rp.log.filter(m => m.role === "rep");
+  if (reps.length < 2) { toast("Have a few exchanges with the buyer first"); return; }
+  if (state.busy) { toast("Wait for the current analysis to finish"); return; }
+  stopAll(); rp.live = false; rp.ended = true; rp.hint = null;
+  const p = persona();
+  renderSetup(); renderStage();
+  $("#rp-reveal").innerHTML = `<div class="reveal">
+      <h3>What ${esc(firstName(p.name))} knew</h3>
+      <p>Everything the buyer could have told you. Compare it with what you uncovered: anything here you didn't hear is a question to ask next time.</p>
+      <dl class="facts">${FACT_LABELS.map(([k, l]) => `<dt>${l}</dt><dd>${esc(p.facts[k])}</dd>`).join("")}</dl>
+      <div class="acts"><a class="btn small" href="#results">${icon("score")}See your scorecard</a><button type="button" class="btn small quiet" id="rp-again">Practise again</button></div>
+    </div>`;
+  $("#rp-again").addEventListener("click", () => { $("#rp-setup").scrollIntoView({ behavior: "smooth", block: "start" }); startRoleplay(); });
+  const transcript = roleplayTranscript();
+  state.practice = null; renderPractice();
+  loadText(transcript, { kind: rp.channel === "chat" ? "chat" : "call" });
+  analyse(transcript, `Role-play: ${p.name}`, "fix");
+}
+
 /* ---------- Start ---------- */
 renderFramework(); renderPractice(); renderHistory(); updateCount();
 renderDemo(); renderEmpty(); renderDash();
+renderSetup(); renderBrief();
 })();
 </script>
 </body>
