@@ -187,7 +187,7 @@ async function handler(req, res) {
     res.setHeader("allow", "POST");
     return send(res, 405, { code: "method_not_allowed", message: "Use POST." });
   }
-  const key = process.env.ANTHROPIC_API_KEY;
+  const key = String(process.env.ANTHROPIC_API_KEY || "").trim().replace(/^["']|["']$/g, "");
   if (!key) {
     return send(res, 503, { code: "not_configured", message: "Live analysis isn't switched on for this site yet. Try a practice call to see a saved analysis." });
   }
@@ -218,6 +218,9 @@ async function handler(req, res) {
         messages: [{ role: "user", content: buildPrompt(transcript, framework, source) }]
       })
     });
+    if (r.status === 401) {
+      return send(res, 502, { code: "bad_key", message: "The site's Anthropic API key isn't valid. Check the ANTHROPIC_API_KEY setting in Vercel." });
+    }
     if (r.status === 429) {
       return send(res, 429, { code: "rate_limited", message: "Too many analyses at once. Wait a minute and try again." });
     }

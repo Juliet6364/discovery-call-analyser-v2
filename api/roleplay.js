@@ -141,6 +141,7 @@ async function callClaude(key, payload) {
     headers: { "content-type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01" },
     body: JSON.stringify({ model: process.env.CLAUDE_ROLEPLAY_MODEL || DEFAULT_MODEL, ...payload })
   });
+  if (r.status === 401) return { error: [502, "bad_key", "The site's Anthropic API key isn't valid. Check the ANTHROPIC_API_KEY setting in Vercel."] };
   if (r.status === 429) return { error: [429, "rate_limited", "Too many requests at once. Wait a few seconds and try again."] };
   if (!r.ok) {
     console.error("Anthropic API error", r.status, (await r.text()).slice(0, 500));
@@ -154,7 +155,7 @@ async function handler(req, res) {
     res.setHeader("allow", "POST");
     return send(res, 405, { code: "method_not_allowed", message: "Use POST." });
   }
-  const key = process.env.ANTHROPIC_API_KEY;
+  const key = String(process.env.ANTHROPIC_API_KEY || "").trim().replace(/^["']|["']$/g, "");
   if (!key) {
     return send(res, 503, { code: "not_configured", message: "Live role-play isn't switched on for this site yet: it needs an Anthropic API key in the site settings." });
   }
