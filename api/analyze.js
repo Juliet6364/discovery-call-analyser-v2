@@ -226,7 +226,9 @@ async function handler(req, res) {
       return send(res, 429, { code: "rate_limited", message: "Too many analyses at once. Wait a minute and try again." });
     }
     if (!r.ok) {
-      console.error("Anthropic API error", r.status, (await r.text()).slice(0, 500));
+      const detail = (await r.text()).slice(0, 500);
+      console.error("Anthropic API error", r.status, detail);
+      if (/credit balance/i.test(detail)) return send(res, 502, { code: "no_credit", message: "The site's Anthropic account has run out of credit. Add credit under Plans & Billing in the Anthropic console." });
       return send(res, 502, { code: "upstream_error", message: "The AI service returned an error. Try again in a minute." });
     }
     const data = await r.json();

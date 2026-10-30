@@ -144,7 +144,9 @@ async function callClaude(key, payload) {
   if (r.status === 401) { console.error("Anthropic API key rejected (401), key length", key.length, "starts", key.slice(0, 10)); return { error: [502, "bad_key", "The site's Anthropic API key isn't valid. Check the ANTHROPIC_API_KEY setting in Vercel."] }; }
   if (r.status === 429) return { error: [429, "rate_limited", "Too many requests at once. Wait a few seconds and try again."] };
   if (!r.ok) {
-    console.error("Anthropic API error", r.status, (await r.text()).slice(0, 500));
+    const detail = (await r.text()).slice(0, 500);
+    console.error("Anthropic API error", r.status, detail);
+    if (/credit balance/i.test(detail)) return { error: [502, "no_credit", "The site's Anthropic account has run out of credit. Add credit under Plans & Billing in the Anthropic console."] };
     return { error: [502, "upstream_error", "The AI buyer couldn't answer just now. Try sending again."] };
   }
   return { data: await r.json() };
