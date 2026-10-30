@@ -9,6 +9,8 @@ const good = (fw) => ({
   summary: "s", verdict: "Advance", verdict_reason: "r",
   scores: FRAMEWORKS[fw].elements.map(e => ({ element: e.name, score: 2, evidence: "q", gap: "g" })),
   missed_questions: ["a", "b"], next_steps: ["x"], strengths: ["y"], improve: ["z"],
+  top_fix: "Ask before you pitch.",
+  rewrites: [{ type: "missed_cue", quote: "We use Zapier", issue: "Not explored", better: "What is Zapier doing for you today?", skill: "Listening and follow-up" }],
   follow_up_email: { subject: "Hi", body: "Thanks" },
   crm: { company: "Acme" }
 });
@@ -33,6 +35,26 @@ test("validate keeps good output and totals it", () => {
   assert.equal(r.follow_up_email.subject, "Hi");
   const noMail = validate({ ...good("BANT"), follow_up_email: undefined }, "BANT");
   assert.deepEqual(noMail.follow_up_email, { subject: "", body: "" });
+});
+
+test("validate keeps and repairs say-it-better coaching", () => {
+  const raw = good("MEDDICC");
+  raw.rewrites.push(
+    { type: "odd", quote: "q", issue: "i", better: "Say this", skill: "Magic" },
+    { type: "rewrite", quote: "q", issue: "i", better: "" },
+    null, "text"
+  );
+  const r = validate(raw, "MEDDICC");
+  assert.equal(r.top_fix, "Ask before you pitch.");
+  assert.equal(r.rewrites.length, 2);
+  assert.equal(r.rewrites[0].skill, "Listening and follow-up");
+  assert.deepEqual([r.rewrites[1].type, r.rewrites[1].skill], ["rewrite", "Discovery questions"]);
+  const none = validate({ ...good("BANT"), rewrites: undefined, top_fix: undefined }, "BANT");
+  assert.deepEqual(none.rewrites, []); assert.equal(none.top_fix, "");
+  const schema = buildTool("SPICED").input_schema;
+  assert.ok(schema.required.includes("rewrites"));
+  assert.deepEqual(schema.properties.rewrites.items.properties.skill.enum, require("../public/frameworks.js").SKILLS);
+  assert.match(buildPrompt("hello", "SPICED", "chat"), /missed_cue/);
 });
 
 test("validate clamps bad scores and verdicts", () => {

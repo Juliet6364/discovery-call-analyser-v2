@@ -1,15 +1,16 @@
 # Discovery Call Analyser v2
 
-An AI coach for B2B sales discovery calls. Add a conversation, and it:
+An AI coach for SDRs and outbound sales teams. Add a discovery call or a sales chat, and it:
 
 - **Scores how well the lead was qualified** with **MEDDICC**, **BANT** or **SPICED**, quoting the conversation as evidence for every score
 - **Flags what wasn't asked** and gives the exact questions to ask on the next call
+- **Shows what to say better**: quotes the rep's weak lines and the buyer cues they missed, gives the exact words to use instead, and names the one thing to fix first
 - **Recommends a verdict** (Advance, Nurture or Disqualify) and next steps
 - **Highlights the transcript**, tagging each quote with the element it supports
 - **Drafts the follow-up email** to the buyer, ready to copy or open in your email app
 - **Writes CRM notes**, ready to copy or export with your history as CSV
 - **Saves a PDF report** of the scorecard, transcript, email and CRM notes
-- **Tracks progress**: average score over time and the elements you miss most often
+- **Tracks progress**: average score over time, the elements you miss most often, and the selling skills that come up most in coaching
 
 Conversations can be **pasted**, uploaded as a **.txt** file, uploaded as an **audio recording**, or **recorded in the browser**. Audio is transcribed on the user's own device, so recordings are never uploaded.
 
@@ -23,7 +24,7 @@ Version 1, built for my Business Analyst with Applied AI course, is at [discover
 | Frameworks | MEDDICC | MEDDICC, BANT, SPICED |
 | AI output | JSON parsed from free text | Forced tool call with a JSON schema, then validated |
 | Demo mode | Saved MEDDICC results for 5 calls | Saved results for 6 conversations in all 3 frameworks |
-| Outputs | Scorecard, CRM notes | Adds highlighted transcript, follow-up email draft and PDF report |
+| Outputs | Scorecard, CRM notes | Adds "Say it better" line-by-line coaching, highlighted transcript, follow-up email draft and PDF report |
 | Progress | History table | History plus a dashboard: score trend and most-missed elements |
 | Tests | None | Automated tests for validation, scoring bands and the API |
 
@@ -57,6 +58,17 @@ Each element is scored **0** (not covered), **1** (partly covered) or **2** (cle
 Score bands use the share of the maximum so all three read the same way: under 40% weakly qualified, 40–74% needs work, 75% and above well qualified. For MEDDICC that is 0–6, 7–11 and 12–16, the same as v1.
 
 **The score and the verdict measure different things.** The score shows how well the rep qualified the lead. The verdict shows whether the deal is worth pursuing. A well-run call can score high and still end in Disqualify.
+
+## Say it better
+
+Scores tell a rep *what* was missed; this tab shows *how* to fix it. For each conversation the AI picks the 3 to 5 moments that mattered most:
+
+| Type | What it quotes | What it gives |
+|---|---|---|
+| Could be said better | A line the rep said: pitching too early, a closed question, price without value, accepting "send me a proposal" | The line to say instead |
+| Missed cue | A line the buyer said that wasn't followed up: a number, a name, a competitor, a hint about timing | The follow-up question to ask |
+
+Each moment is tagged with one of six selling skills (Opening, Discovery questions, Listening and follow-up, Value and pricing, Objection handling, Next step), and the result opens with **Fix this first**, the one change that would most improve the next conversation. Chat suggestions are written in chat style, short and informal. Moments are highlighted in blue on the transcript, coaching notes can be copied for a 1:1, and the dashboard counts which skill comes up most across all conversations.
 
 ## Practice conversations
 

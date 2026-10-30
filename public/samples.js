@@ -26,6 +26,37 @@ window.PRACTICE = [
     "Could have asked Sanjay about his own stake in the project.",
     "Didn't ask what the competing proposals looked like."
    ],
+   "top_fix": "Find out what the MD needs to see from the proof of value, so the steering committee isn't the first time he hears about it.",
+   "rewrites": [
+    {
+     "type": "missed_cue",
+     "quote": "Both are on my KRA sheet and the CFO's.",
+     "issue": "Sanjay revealed a personal stake in the outcome, and the conversation moved straight on to budget.",
+     "better": "You said both targets are on your KRA sheet. What happens for you personally if DSO is still at 68 days next year?",
+     "skill": "Listening and follow-up"
+    },
+    {
+     "type": "missed_cue",
+     "quote": "Anything above 1 crore also needs our MD's approval.",
+     "issue": "The MD is the final approver, but we don't know what he cares about or whether he'll see the results before December.",
+     "better": "Since your MD signs off above 1 crore, what will he want to see from the proof of value? Could we brief him before the steering committee?",
+     "skill": "Discovery questions"
+    },
+    {
+     "type": "missed_cue",
+     "quote": "A UiPath partner.",
+     "issue": "The competing vendor was named but not explored, so we don't know how far along they are.",
+     "better": "How far have you got with the UiPath partner, and what did you like about their approach?",
+     "skill": "Discovery questions"
+    },
+    {
+     "type": "rewrite",
+     "quote": "What would make the in-house option win?",
+     "issue": "A good question, but the answer (cost) wasn't followed up with the cost of failing to hit the DSO target.",
+     "better": "If cost is the in-house team's advantage, what would missing the 55-day DSO target cost you this year?",
+     "skill": "Objection handling"
+    }
+   ],
    "follow_up_email": {
     "subject": "Scoping workshop on 4 November: agenda and security pack",
     "body": "Hi Sanjay,\n\nThank you for the time today. To recap: your team keys around 40,000 emailed POs a month into SAP S/4HANA, and the goal is 80% touchless orders and a DSO of 55 days by year end.\n\nFor the scoping workshop on 4 November at 11 am with Deepa and your InfoSec lead, I suggest we cover:\n- success criteria for the 6-week proof of value\n- the on-premise bot setup and SAP connector\n- InfoSec and DPA requirements, so legal can start early\n\nI'll send our security pack and a draft DPA this week. Would it also be possible to get 20 minutes with Ramesh before the steering committee in December?\n\nBest regards,\nJuliet\nNexora Automation"
@@ -206,6 +237,37 @@ window.PRACTICE = [
     "Demoed before learning the decision criteria and process.",
     "Gave a wide price range without anchoring it to the cost of the problem.",
     "Accepted 'send me a proposal' instead of booking the next meeting."
+   ],
+   "top_fix": "Ask how Meera and Farhan will make the decision before you demo or quote a price.",
+   "rewrites": [
+    {
+     "type": "rewrite",
+     "quote": "Got it. Let me show you how our bots handle e-way bills.",
+     "issue": "Jumped into a demo before learning how a solution will be judged or approved.",
+     "better": "Before I show you anything, how will you and Farhan decide whether a solution is right, and what are the steps to get it approved?",
+     "skill": "Discovery questions"
+    },
+    {
+     "type": "rewrite",
+     "quote": "We deploy faster, and we include AI document reading for emailed invoices. Our pricing is usually lower too.",
+     "issue": "Answered the competitor question with general claims instead of finding out what Meera thought of them.",
+     "better": "Good to know. What did you like about their approach, and what's still missing for you?",
+     "skill": "Objection handling"
+    },
+    {
+     "type": "rewrite",
+     "quote": "It depends on volumes, but for your size roughly 25 to 40 lakh in the first year.",
+     "issue": "Gave a wide price range without linking it to what the problem costs, so it sounded expensive.",
+     "better": "You mentioned about 18 lakh a quarter in detention charges and penalties, plus 12 hires you'd rather avoid. Most teams your size invest 25 to 40 lakh in year one. How does that compare with what the problem costs you?",
+     "skill": "Value and pricing"
+    },
+    {
+     "type": "rewrite",
+     "quote": "Will do. I'll send it by Friday.",
+     "issue": "Accepted 'send me a proposal' without booking a meeting, so the deal now depends on an email.",
+     "better": "Happy to. So it answers Farhan's questions too, could the three of us take 30 minutes next week to go through it together?",
+     "skill": "Next step"
+    }
    ],
    "follow_up_email": {
     "subject": "E-way bill automation: a quick call with Farhan before the proposal",
@@ -390,6 +452,37 @@ window.PRACTICE = [
     "Demoed before quantifying value.",
     "Accepted 'send it across' instead of booking a meeting."
    ],
+   "top_fix": "Help Anil put a rupee value on the discharge delays, because his business case needs one to get past the CEO.",
+   "rewrites": [
+    {
+     "type": "missed_cue",
+     "quote": "I haven't been given a revenue number.",
+     "issue": "Anil said he has no financial value for the problem, which is exactly what his business case needs.",
+     "better": "Could we work that number out together? Roughly how many emergency admissions do you turn away in a month, and what's an average admission worth?",
+     "skill": "Value and pricing"
+    },
+    {
+     "type": "missed_cue",
+     "quote": "Our CEO, Dr. Suresh Menon, approves IT spend above 25 lakh.",
+     "issue": "The economic buyer was named, but we don't know what he will look for.",
+     "better": "What will Dr. Menon look for in the business case? I'm happy to help you prepare it.",
+     "skill": "Listening and follow-up"
+    },
+    {
+     "type": "rewrite",
+     "quote": "Great. Let me show you a sample discharge process map from another hospital group.",
+     "issue": "Moved to a demo before asking about other options, including building it in-house.",
+     "better": "Before I show you an example, are you looking at any other ways to solve this, including building it in-house?",
+     "skill": "Discovery questions"
+    },
+    {
+     "type": "rewrite",
+     "quote": "I'll send you a proposal for a pilot at two hospitals next week.",
+     "issue": "Offered to send a proposal instead of booking time to shape it with Anil.",
+     "better": "Shall we go through a pilot plan for two hospitals together next week, so it fits your business case before the IT committee meets?",
+     "skill": "Next step"
+    }
+   ],
    "follow_up_email": {
     "subject": "Discharge visibility pilot: next steps",
     "body": "Hi Anil,\n\nThank you for walking me through the discharge challenge. Average discharge is over 6 hours across your 14 hospitals, and the medical director wants it under 3.\n\nI'll send a pilot proposal for two hospitals next week, designed to work with your on-prem HIS, keep patient data on your servers, and show results within three months. I'll aim to keep it under 25 lakh so it fits within your approval.\n\nCould we book 30 minutes next week to go through it together before it goes to Dr. Menon? I'd also like to estimate the cost of turned-away emergency admissions with you, so the business case has a clear number.\n\nBest regards,\nJuliet\nNexora Automation"
@@ -568,6 +661,37 @@ window.PRACTICE = [
     "Pitched features for most of the call without asking a single discovery question.",
     "Offered a discount before any need was established.",
     "Ended with a brochure instead of a next step."
+   ],
+   "top_fix": "Ask before you pitch: one question about Rohit's priorities would have done more than the whole feature list.",
+   "rewrites": [
+    {
+     "type": "rewrite",
+     "quote": "So Nexora builds AI agents and RPA bots for financial services.",
+     "issue": "With only five minutes, the call went straight into a pitch without finding out what matters to Rohit.",
+     "better": "I'll keep it short. When lenders talk to us it's usually about KYC backlogs or collections. Is either of those on your list this year?",
+     "skill": "Opening"
+    },
+    {
+     "type": "missed_cue",
+     "quote": "We're already running some pilots with our core banking vendor.",
+     "issue": "Rohit shared live projects and the rep replied with another pitch line.",
+     "better": "Interesting. What are those pilots trying to fix, and how are they going so far?",
+     "skill": "Listening and follow-up"
+    },
+    {
+     "type": "missed_cue",
+     "quote": "The RBI audit is on our plate this quarter.",
+     "issue": "The audit is a real priority and a possible trigger for change, but it wasn't explored.",
+     "better": "Makes sense. Is the audit likely to flag any process gaps your team will need to fix afterwards?",
+     "skill": "Listening and follow-up"
+    },
+    {
+     "type": "rewrite",
+     "quote": "If you sign before December, we can give you 20% off the first year.",
+     "issue": "Offered a discount before any need was found, which put Rohit off.",
+     "better": "No problem. Would 20 minutes after the audit be worth it, to see if there's a fit? How does mid-January look?",
+     "skill": "Next step"
+    }
    ],
    "follow_up_email": {
     "subject": "Following up after your RBI audit",
@@ -749,6 +873,30 @@ window.PRACTICE = [
    "improve": [
     "Could have asked what growth after Series A would look like, to judge timing better."
    ],
+   "top_fix": "Ask what growth after the Series A will look like, so the April check-in has a clear reason to happen.",
+   "rewrites": [
+    {
+     "type": "missed_cue",
+     "quote": "We're focused on raising our Series A by March.",
+     "issue": "The funding round sets the timing for any future deal, but its plans weren't explored.",
+     "better": "After the Series A, how fast do you expect orders to grow, and what will change in operations?",
+     "skill": "Discovery questions"
+    },
+    {
+     "type": "missed_cue",
+     "quote": "Someone on the team is trying Zapier.",
+     "issue": "We don't know what Zapier is being used for or when it would stop being enough.",
+     "better": "What's the team automating with Zapier, and at what point do you think it would stop being enough?",
+     "skill": "Listening and follow-up"
+    },
+    {
+     "type": "missed_cue",
+     "quote": "Any spend over 2 lakh needs both my co-founder Aisha and me to agree.",
+     "issue": "Aisha is a co-approver but isn't part of the April follow-up.",
+     "better": "Would it help to include Aisha when we speak in April, since you'd decide together?",
+     "skill": "Next step"
+    }
+   ],
    "follow_up_email": {
     "subject": "Thanks, and talk in April",
     "body": "Hi Nikhil,\n\nThanks for being so open today. At around 4,000 orders and one refund error a month, Zapier sounds like the right tool for Brewly right now.\n\nAs agreed, I'll check in after your Series A, around April. If volumes grow faster than expected before then, or reconciliation starts needing more people, feel free to reach out sooner.\n\nAll the best with the raise.\n\nBest regards,\nJuliet\nNexora Automation"
@@ -923,6 +1071,30 @@ window.PRACTICE = [
     "Didn't ask about budget or how the decision gets made.",
     "Accepted 'Anand won't join yet' without asking what he'll need to see.",
     "Didn't ask what Kavya thought of the Tally partner's add-on."
+   ],
+   "top_fix": "Before Thursday's call, ask about budget and what Anand will need to see before he signs.",
+   "rewrites": [
+    {
+     "type": "missed_cue",
+     "quote": "Also thinking of just hiring 2 more people tbh",
+     "issue": "Hiring is the real alternative, and the reply moved on without comparing its cost with the 14 lakh in lost discounts.",
+     "better": "Fair option! What would 2 hires cost a year vs the ~14L in missed discounts? And what did you think of the Tally add-on?",
+     "skill": "Objection handling"
+    },
+    {
+     "type": "missed_cue",
+     "quote": "Anand won't join yet",
+     "issue": "The CFO signs above 20 lakh, but we don't know what he'll need to approve it.",
+     "better": "No problem. What will Anand need to see before he'd sign off on something above 20L?",
+     "skill": "Listening and follow-up"
+    },
+    {
+     "type": "rewrite",
+     "quote": "Perfect, invite sent for Thu 3pm. Could you share 10 sample invoices before then?",
+     "issue": "A good close, but budget never came up in the whole chat.",
+     "better": "Perfect, invite sent for Thu 3pm 👍 Could you share 10 sample invoices before then? Also, is there budget set aside for this, or would it come from the AP hiring plan?",
+     "skill": "Discovery questions"
+    }
    ],
    "follow_up_email": {
     "subject": "Thursday 3pm: invoice demo with Rohit",

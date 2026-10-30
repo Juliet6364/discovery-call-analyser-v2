@@ -64,6 +64,11 @@
 
   const VERDICTS = ["Advance", "Nurture", "Disqualify"];
 
+  // Selling skills used to tag "Say it better" coaching. Framework-independent, so the
+  // dashboard can show which skill a rep needs to work on across every conversation.
+  const SKILLS = ["Opening", "Discovery questions", "Listening and follow-up", "Value and pricing", "Objection handling", "Next step"];
+  const FIX_TYPES = ["rewrite", "missed_cue"];
+
   // Score bands by share of the maximum, so every framework reads the same way.
   // For MEDDICC (out of 16): 0–6 weak, 7–11 needs work, 12–16 well qualified.
   function band(total, max) {
@@ -73,7 +78,7 @@
     return { id: "weak", label: "Weakly qualified" };
   }
 
-  const api = { FRAMEWORKS, CRM_FIELDS, VERDICTS, band };
+  const api = { FRAMEWORKS, CRM_FIELDS, VERDICTS, SKILLS, FIX_TYPES, band };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.DCA = api;
 })(typeof window !== "undefined" ? window : globalThis);

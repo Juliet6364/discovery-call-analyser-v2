@@ -3,7 +3,7 @@
 // Sends the conversation to Claude with the chosen framework's rubric and returns a validated scorecard.
 // Needs the environment variable ANTHROPIC_API_KEY. Optional: CLAUDE_MODEL.
 
-const { FRAMEWORKS, CRM_FIELDS, VERDICTS } = require("../public/frameworks.js");
+const { FRAMEWORKS, CRM_FIELDS, VERDICTS, SKILLS, FIX_TYPES } = require("../public/frameworks.js");
 
 const MIN_CHARS = 80;
 const MAX_CHARS = 60000;
@@ -44,6 +44,11 @@ Score each element on how well the rep established it: 0 = not covered, 1 = part
 
 Verdict on the deal: "Advance" if it is well qualified and a concrete next meeting is booked; "Nurture" if there is real pain but important gaps or no firm next step; "Disqualify" if there is no clear pain, budget or fit, or the conversation gives no basis to pursue it.
 
+Then coach the rep with "say it better" feedback: pick the 3 to 5 moments that mattered most and show what the rep should have said instead. Each moment is one of two types:
+- "rewrite": quote a line the rep actually said that was weak (pitching too early, a closed or leading question, a vague answer, giving price without value, accepting a soft brush-off) and give the better line.
+- "missed_cue": quote a line the buyer said that the rep didn't follow up (a number, a name, a concern, a competitor, a hint about timing or authority) and give the follow-up question the rep should have asked.
+The "better" text is the exact words the rep could say at that moment, in the same channel style: spoken and natural for a call, short and informal for a chat. Use only facts that appear in the conversation. Tag each moment with one skill. Even on a strong call, find moments that would make it sharper. Also give "top_fix": the single change that would most improve the rep's next conversation, in one sentence.
+
 Also draft a short follow-up email from the rep to the buyer, written in the rep's voice: thank them, recap the key facts the buyer shared, and confirm the agreed next step, or propose one if none was booked. Under 160 words, no invented facts, signed with the rep's first name and company if they appear in the conversation.
 
 Write in plain English. Keep the currency and units the speakers used. CRM fields are short factual notes; write "Not discussed" when something is unknown.
@@ -66,7 +71,7 @@ function buildTool(frameworkKey) {
     description: `Record the ${fw.name} analysis of the sales conversation.`,
     input_schema: {
       type: "object",
-      required: ["summary", "verdict", "verdict_reason", "scores", "missed_questions", "next_steps", "strengths", "improve", "follow_up_email", "crm"],
+      required: ["summary", "verdict", "verdict_reason", "scores", "missed_questions", "next_steps", "strengths", "improve", "top_fix", "rewrites", "follow_up_email", "crm"],
       properties: {
         summary: str("Two sentences: who the prospect is and the situation."),
         verdict: { type: "string", enum: VERDICTS },
@@ -91,6 +96,24 @@ function buildTool(frameworkKey) {
         next_steps: list("3 or 4 concrete next actions for the rep.", 1, 4),
         strengths: list("2 or 3 things the rep did well.", 1, 3),
         improve: list("2 or 3 coaching points.", 1, 3),
+        top_fix: str("The one change that would most improve the rep's next conversation, in one sentence."),
+        rewrites: {
+          type: "array",
+          description: "3 to 5 'say it better' moments, in the order they happened in the conversation.",
+          minItems: 1,
+          maxItems: 5,
+          items: {
+            type: "object",
+            required: ["type", "quote", "issue", "better", "skill"],
+            properties: {
+              type: { type: "string", enum: FIX_TYPES, description: "rewrite = a weak rep line; missed_cue = a buyer line the rep didn't follow up." },
+              quote: str("Exact quote from the conversation, under 30 words: the rep's line for a rewrite, the buyer's line for a missed cue."),
+              issue: str("One sentence on what went wrong or what was missed."),
+              better: str("The exact words the rep should have said at that moment."),
+              skill: { type: "string", enum: SKILLS }
+            }
+          }
+        },
         follow_up_email: {
           type: "object",
           required: ["subject", "body"],
@@ -135,6 +158,18 @@ function validate(raw, frameworkKey) {
     next_steps: list(raw.next_steps, 4),
     strengths: list(raw.strengths, 3),
     improve: list(raw.improve, 3),
+    top_fix: s(raw.top_fix, 300),
+    rewrites: (Array.isArray(raw.rewrites) ? raw.rewrites : [])
+      .filter(x => x && typeof x === "object")
+      .map(x => ({
+        type: FIX_TYPES.includes(x.type) ? x.type : "rewrite",
+        quote: s(x.quote, 300),
+        issue: s(x.issue, 300),
+        better: s(x.better, 500),
+        skill: SKILLS.includes(x.skill) ? x.skill : "Discovery questions"
+      }))
+      .filter(x => x.better)
+      .slice(0, 5),
     follow_up_email: { subject: s(mail.subject, 200), body: s(mail.body, 2000) },
     crm: Object.fromEntries(CRM_FIELDS.map(([k]) => [k, s(crmIn[k], 400) || "Not discussed"]))
   };
@@ -177,7 +212,7 @@ async function handler(req, res) {
       headers: { "content-type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01" },
       body: JSON.stringify({
         model: process.env.CLAUDE_MODEL || DEFAULT_MODEL,
-        max_tokens: 4000,
+        max_tokens: 6000,
         tools: [buildTool(framework)],
         tool_choice: { type: "tool", name: "record_analysis" },
         messages: [{ role: "user", content: buildPrompt(transcript, framework, source) }]
