@@ -141,7 +141,7 @@ async function callClaude(key, payload) {
     headers: { "content-type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01" },
     body: JSON.stringify({ model: process.env.CLAUDE_ROLEPLAY_MODEL || DEFAULT_MODEL, ...payload })
   });
-  if (r.status === 401) return { error: [502, "bad_key", "The site's Anthropic API key isn't valid. Check the ANTHROPIC_API_KEY setting in Vercel."] };
+  if (r.status === 401) { console.error("Anthropic API key rejected (401), key length", key.length, "starts", key.slice(0, 10)); return { error: [502, "bad_key", "The site's Anthropic API key isn't valid. Check the ANTHROPIC_API_KEY setting in Vercel."] }; }
   if (r.status === 429) return { error: [429, "rate_limited", "Too many requests at once. Wait a few seconds and try again."] };
   if (!r.ok) {
     console.error("Anthropic API error", r.status, (await r.text()).slice(0, 500));

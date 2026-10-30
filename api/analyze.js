@@ -219,6 +219,7 @@ async function handler(req, res) {
       })
     });
     if (r.status === 401) {
+      console.error("Anthropic API key rejected (401), key length", key.length, "starts", key.slice(0, 10));
       return send(res, 502, { code: "bad_key", message: "The site's Anthropic API key isn't valid. Check the ANTHROPIC_API_KEY setting in Vercel." });
     }
     if (r.status === 429) {
